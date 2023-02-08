@@ -43,7 +43,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="10dp"
-                    android:backgroundTint="@color/corp"
+                    android:backgroundTint="@color/corp3"
                     android:onClick="createNoteFromCN"
                     android:text="@string/confirm" />
             </LinearLayout>
