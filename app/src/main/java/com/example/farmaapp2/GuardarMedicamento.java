@@ -24,6 +24,9 @@ import android.widget.TimePicker;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -47,13 +50,17 @@ public class GuardarMedicamento extends AppCompatActivity {
     private TextView mTitleText;
     private TextView mBodyText;
     private Long mRowId;
-    //private MedicamentoAdapter dbAdapter;
+    private MedicamentoAdapter dbAdapter;
 
 
    @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.resumen_medicamento);
+
+       //creamos el adaptador de la BD y la abrimos
+       dbAdapter = new MedicamentoAdapter(this);
+       dbAdapter.open();
 
         Bundle bundle = this.getIntent().getExtras();
         String respuesta = bundle.getString("Result");
@@ -175,9 +182,6 @@ public class GuardarMedicamento extends AppCompatActivity {
         startActivity(intent);
     }
 
-    //-----------------------------------Guardar Medicamento en la Base de Datos----------------------------------
-
-
 
     //--------------------Crea Menu de opciones dentro del medicamento------------------------
 
@@ -187,6 +191,47 @@ public class GuardarMedicamento extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_edit, menu);
         return true;
     }
+
+    /*----------------------Guardar el Medicamento en la Base de Datos-------------------------
+                Con este metodo guardamos un nuevo medicamento en la lista, al pulsar
+                        el boton OnClick del layout de resumen_medicamento.
+     */
+    public void sendName(View view) {
+
+        String title = nombre.getText().toString();
+        Log.i("----------------------RECEIVED", title);
+        String pactivo = p_activo.getText().toString();
+        Log.i("----------------------RECEIVED", pactivo);
+        String prescripcion = c_presc.getText().toString();
+        Log.i("----------------------RECEIVED", prescripcion);
+        String viadministracion = via_admin.getText().toString();
+        Log.i("----------------------RECEIVED", viadministracion);
+
+
+        if (mRowId == null) {
+
+            long id = dbAdapter.createNote(title, pactivo);
+            if (id > 0) {
+                mRowId = id;
+            }
+        } else {
+            dbAdapter.updateNote(mRowId, title, pactivo);
+        }
+        /*
+        if (mRowId == null) {
+            long id = dbAdapter.createNote(title, pactivo, prescripcion, viadministracion);
+            if (id > 0) {
+                mRowId = id;
+            }
+        } else {
+            dbAdapter.updateNote(mRowId, title, pactivo, prescripcion, viadministracion);
+        }
+         */
+        setResult(RESULT_OK);
+        dbAdapter.close();
+        finish();
+    }
+
 
 
 }
