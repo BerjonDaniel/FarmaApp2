@@ -10,9 +10,9 @@
         android:orderInCategory="1"
         android:title="@string/menu_delete"
         app:showAsAction="never" />
-        <!--
-        android:onClick="deleteNote"
-        -->
+    <!--
+    android:onClick="sendName"
+    -->
 
 
 </menu>

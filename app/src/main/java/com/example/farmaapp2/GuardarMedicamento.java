@@ -59,8 +59,12 @@ public class GuardarMedicamento extends AppCompatActivity {
         setContentView(R.layout.resumen_medicamento);
 
        //creamos el adaptador de la BD y la abrimos
+       AdaptadorDB.AdaptadorDBHelper dbHelper = new AdaptadorDB.AdaptadorDBHelper(this);
+       /*
        dbAdapter = new MedicamentoAdapter(this);
        dbAdapter.open();
+        */
+
 
         Bundle bundle = this.getIntent().getExtras();
         String respuesta = bundle.getString("Result");
@@ -227,6 +231,12 @@ public class GuardarMedicamento extends AppCompatActivity {
             dbAdapter.updateNote(mRowId, title, pactivo, prescripcion, viadministracion);
         }
          */
+        setResult(RESULT_OK);
+        dbAdapter.close();
+        finish();
+    }
+    public void borarNota(View view){
+        dbAdapter.deleteNote(mRowId);
         setResult(RESULT_OK);
         dbAdapter.close();
         finish();
