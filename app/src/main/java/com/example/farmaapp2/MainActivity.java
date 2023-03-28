@@ -66,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         // Creamos un listview que va a contener el título de todas las notas y
         // en el que cuando pulsemos sobre un título lancemos una actividad de editar
         // la nota con el id correspondiente
+
         m_listview = (ListView) findViewById(R.id.id_list_view);
         m_listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
@@ -77,8 +78,11 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 }
         );
 
+
+
         // rellenamos el listview con los títulos de todas las notas en la BD
         fillData();
+
     }
 
     private void fillData() {

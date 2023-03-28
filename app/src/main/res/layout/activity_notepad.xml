@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".MainActivity">
+    <include layout="@layout/app_bar_main" />
     <LinearLayout
         android:id="@+id/dim_layout"
         android:layout_width="match_parent"
@@ -15,7 +16,6 @@
         android:visibility="invisible"
         tools:ignore="Orientation" >
 
-        <include layout="@layout/app_bar_main" />
     </LinearLayout>
     <ListView
         android:id="@+id/id_list_view"
@@ -28,9 +28,9 @@
         android:dividerHeight="1.0sp"
         />
 
-    <!--
+
     <include layout="@layout/calendar"/>
-    -->
+
 
     <TextView
         android:id="@+id/resultado"

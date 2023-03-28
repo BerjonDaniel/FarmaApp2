@@ -8,6 +8,7 @@ import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -54,12 +55,14 @@ public class GuardarMedicamento2 extends AppCompatActivity {
     private Button btnGuardar;
     String error;
 
-    private MedicamentoAdapterChat medicamentoAdapter;
+    private MedicamentoAdapterChat medicamentoAdapterChat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.resumen_medicamento);
+
+        medicamentoAdapterChat = new MedicamentoAdapterChat(this);
 
         //Esto es lo que falla! preguntale a chatgpt que te lo haga
         try {
@@ -67,9 +70,11 @@ public class GuardarMedicamento2 extends AppCompatActivity {
             if(bundle.getString("Result")!=null){
                 String respuesta = bundle.getString("Result");
                 SetPrescriptionData(respuesta);
-            }else if(bundle.getString("RowId")!=null){
-                String respuesta = bundle.getString("RowId");
-                SetPrescriptionData(respuesta);
+            }else if(bundle.getLong("RowId") != 0){
+                Long respuesta = bundle.getLong("RowId");
+                Cursor cursor = medicamentoAdapterChat.obtenerMedicamento(respuesta);
+
+                //SetPrescriptionData();
             }
         }catch (Exception e) {
             e.printStackTrace();
@@ -89,7 +94,7 @@ public class GuardarMedicamento2 extends AppCompatActivity {
         btnGuardar.setOnClickListener(guardarClickListener);
 
         // Creamos una instancia del MedicamentoAdapter
-        medicamentoAdapter = new MedicamentoAdapterChat(this);
+        medicamentoAdapterChat = new MedicamentoAdapterChat(this);
     }
 
     public void SetPrescriptionData(String data) {
@@ -193,12 +198,13 @@ public class GuardarMedicamento2 extends AppCompatActivity {
         // Creamos un objeto Medicamento con los datos del medicamento
 
         // Insertamos el medicamento en la base de datos
-        long id = medicamentoAdapter.insertarMedicamento(nombre, descripcion, cPresc, viaAdmin);
+        long id = medicamentoAdapterChat.insertarMedicamento(nombre, descripcion, cPresc, viaAdmin);
         if (id != -1) {
             Toast.makeText(this, "Medicamento guardado correctamente", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(this, "Error al guardar el medicamento", Toast.LENGTH_SHORT).show();
         }
+        finish();
     }
 
 }
