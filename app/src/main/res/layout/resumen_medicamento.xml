@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".GuardarMedicamento">
+    tools:context=".GuardarMedicamento2">
 
     <FrameLayout
     android:layout_width="match_parent"
@@ -206,7 +206,7 @@
                         android:layout_marginBottom="20dp"
                         android:gravity="center"
                         android:backgroundTint="@color/corp3"
-                        android:onClick="sendName"
+                        android:onClick="guardarClickListener"
                         android:text="Guardar Medicamento" />
 
                 </LinearLayout>

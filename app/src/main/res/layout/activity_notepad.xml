@@ -13,7 +13,10 @@
         android:layout_height="match_parent"
         android:background="#c0000000"
         android:visibility="invisible"
-        tools:ignore="Orientation" />
+        tools:ignore="Orientation" >
+
+        <include layout="@layout/app_bar_main" />
+    </LinearLayout>
     <ListView
         android:id="@+id/id_list_view"
         android:layout_width="fill_parent"
@@ -22,9 +25,9 @@
         android:layout_marginTop="150dp"
         android:textAlignment="center"
         android:divider="@color/blackclaro"
-        android:dividerHeight="1.0sp"/>
+        android:dividerHeight="1.0sp"
+        />
 
-    <include layout="@layout/app_bar_main" />
     <!--
     <include layout="@layout/calendar"/>
     -->

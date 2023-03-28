@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     private ArrayList<String> resultado = new ArrayList<String>();
     private EditText codigo_nacional;
 
-    private MedicamentoAdapter dbAdapter;
+    private MedicamentoAdapterChat dbAdapter;
     private ListView m_listview;
 
 
@@ -60,20 +60,19 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         setContentView(R.layout.activity_notepad);
 
         //creamos el adaptador de la BD y la abrimos
-        dbAdapter = new MedicamentoAdapter(this);
-        dbAdapter.open();
+        dbAdapter = new MedicamentoAdapterChat(this);
+        dbAdapter.abrir();
 
         // Creamos un listview que va a contener el título de todas las notas y
         // en el que cuando pulsemos sobre un título lancemos una actividad de editar
         // la nota con el id correspondiente
         m_listview = (ListView) findViewById(R.id.id_list_view);
-        m_listview.setOnItemClickListener(
-                new AdapterView.OnItemClickListener() {
+        m_listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
-                    public void onItemClick(AdapterView<?> arg0, View view, int position, long id) {
-                        Intent i = new Intent(view.getContext(), GuardarMedicamento.class);
-                        i.putExtra(MedicamentoAdapter.KEY_ROWID, id);
-                        startActivityForResult(i,1);
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        Intent i = new Intent(MainActivity.this, GuardarMedicamento2.class);
+                        i.putExtra("RowId", id);
+                        startActivity(i);
                     }
                 }
         );
@@ -83,10 +82,10 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     }
 
     private void fillData() {
-        Cursor notesCursor = dbAdapter.fetchAllNotes();
+        Cursor notesCursor = dbAdapter.obtenerTodosLosMedicamentos();
 
         // Creamos un array con los campos que queremos mostrar en el listview (sólo el título de la nota)
-        String[] from = new String[]{MedicamentoAdapter.KEY_TITLE};
+        String[] from = new String[]{MedicamentoAdapterChat.KEY_NOMBRE};
 
         // array con los campos que queremos ligar a los campos del array de la línea anterior (en este caso sólo text1)
         int[] to = new int[]{R.id.text1};
@@ -163,7 +162,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     }
     private void switchMaintoBarCode(String result) {
         // Creamos el Intent que va a lanzar la activity de editar medicamento (ApiCodeBar)
-        Intent intent = new Intent(this, GuardarMedicamento.class);
+        Intent intent = new Intent(this, GuardarMedicamento2.class);
         startActivityForResult(intent, 1);
         // Creamos la informacion a pasar entre actividades
         //Bundle b = new Bundle();
@@ -174,8 +173,6 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         // Iniciamos la nueva actividad
         startActivity(intent);
     }
-
-
 
     //---------------------Creamos menu con las tres opciones de añadir------------------
 

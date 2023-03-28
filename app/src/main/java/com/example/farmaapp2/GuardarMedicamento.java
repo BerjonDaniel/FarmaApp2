@@ -27,6 +27,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -51,6 +52,7 @@ public class GuardarMedicamento extends AppCompatActivity {
     private TextView mBodyText;
     private Long mRowId;
     private MedicamentoAdapter dbAdapter;
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
 
 
    @Override
