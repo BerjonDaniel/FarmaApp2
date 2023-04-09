@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-// Clase adaptadora que nos va a facilitar el uso de la BD
+// ¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡ YA NO SE USA ESTA CLASE !!!!!!!!!!!!!!!
 public class MedicamentoAdapter {
     private static final String TAG = "APMOV: NotesDbAdapter"; // Usado en los mensajes de Log
 

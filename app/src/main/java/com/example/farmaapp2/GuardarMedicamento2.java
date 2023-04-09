@@ -50,10 +50,12 @@ import java.util.Random;
 
 public class GuardarMedicamento2 extends AppCompatActivity {
 
+    private Long mRowId;
     private TextView nombre_med;
     private TextView p_activo;
     private TextView c_presc;
     private TextView via_admin;
+    private String url_prospecto;
     private Button btnGuardar;
     String error;
 
@@ -175,7 +177,7 @@ public class GuardarMedicamento2 extends AppCompatActivity {
         p_activo.setText(pActivo);
         c_presc.setText(cPresc);
         via_admin.setText(viasAdministracion);
-        //url_prospecto = urlProspecto;
+        url_prospecto = urlProspecto;
         //Loop para escribir lista de VIAS DE ADMINISTRACION
         /*for(int i = 0;i < viasAdministracion.size(); i++){
             vias_administracion = viasAdministracion.get(i);
@@ -216,7 +218,8 @@ public class GuardarMedicamento2 extends AppCompatActivity {
             cPresc = obj.getString("prescripcion");
             //JSONArray documentosArray = obj.getJSONArray("docs");
             viasAdministracion = obj.getString("via_administracion");
-            /*
+            urlProspecto = obj.getString("url_prospecto");
+/*
             //Loop para buscar PROSPECTO
             for (int i = 0; i < documentosArray.length(); i++)
             {
@@ -224,9 +227,6 @@ public class GuardarMedicamento2 extends AppCompatActivity {
                     urlProspecto = documentosArray.getJSONObject(i).getString("url");
                 }
             }
-
-             */
-
             /*
             //Loop para buscar VIAS DE ADMINISTRACION --------------- Cuando venimos desde el menu principal, no lo necesitamos
             for (int i = 0; i < viasAdminArray.length(); i++)       //(solo con escaneo será necesario)
@@ -247,7 +247,7 @@ public class GuardarMedicamento2 extends AppCompatActivity {
         p_activo.setText(pActivo);
         c_presc.setText(cPresc);
         via_admin.setText(viasAdministracion);
-        //url_prospecto = urlProspecto;
+        url_prospecto = urlProspecto;
         //Loop para escribir lista de VIAS DE ADMINISTRACION
         /*for(int i = 0;i < viasAdministracion.size(); i++){
             vias_administracion = viasAdministracion.get(i);
@@ -265,9 +265,10 @@ public class GuardarMedicamento2 extends AppCompatActivity {
             String descripcion = p_activo.getText().toString();
             String cPresc = c_presc.getText().toString();
             String viaAdmin = via_admin.getText().toString();
+            String urlProspecto = url_prospecto;
 
             // Guardamos el medicamento en la base de datos
-            guardarMedicamento(nombre, descripcion, cPresc, viaAdmin);
+            guardarMedicamento(nombre, descripcion, cPresc, viaAdmin, urlProspecto);
 
             // Mostramos un mensaje al usuario
             Toast.makeText(GuardarMedicamento2.this, "Medicamento guardado correctamente", Toast.LENGTH_SHORT).show();
@@ -288,17 +289,25 @@ public class GuardarMedicamento2 extends AppCompatActivity {
 
      */
 
-    private void guardarMedicamento(String nombre, String descripcion, String cPresc, String viaAdmin) {
+    private void guardarMedicamento(String nombre, String descripcion, String cPresc, String viaAdmin, String urlProspecto) {
         // Creamos un objeto Medicamento con los datos del medicamento
 
         // Insertamos el medicamento en la base de datos
-        long id = medicamentoAdapterChat.insertarMedicamento(nombre, descripcion, cPresc, viaAdmin);
+        long id = medicamentoAdapterChat.insertarMedicamento(nombre, descripcion, cPresc, viaAdmin, urlProspecto);
         if (id != -1) {
             Toast.makeText(this, "Medicamento guardado correctamente", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(this, "Error al guardar el medicamento", Toast.LENGTH_SHORT).show();
         }
         finish();
+    }
+
+    //Para poder abrir el prospecto
+    public void  abrirurl(View view){
+
+        Uri uri = Uri.parse(url_prospecto); // missing 'http://' will cause crashed
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        startActivity(intent);
     }
 
 }

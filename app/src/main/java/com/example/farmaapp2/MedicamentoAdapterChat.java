@@ -8,7 +8,6 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-
 public class MedicamentoAdapterChat {
     private Connection conexion = null;
     private static final String TABLA_MEDICAMENTOS = "medicamentos";
@@ -17,12 +16,13 @@ public class MedicamentoAdapterChat {
     public static final String KEY_BODY = "descripcion";
     public static final String KEY_PRESCRIPCION = "prescripcion";
     public static final String KEY_VIADMIN = "via_administracion";
+    public static final String KEY_URL_PROSPECTO = "url_prospecto";
 
     private DataBaseHelper mDbHelper;
     private SQLiteDatabase mDb;
     private final Context mContext;
 
-    private static final String[] TODOS_CAMPOS = {KEY_ROWID, KEY_NOMBRE, KEY_BODY, KEY_PRESCRIPCION, KEY_VIADMIN};
+    private static final String[] TODOS_CAMPOS = {KEY_ROWID, KEY_NOMBRE, KEY_BODY, KEY_PRESCRIPCION, KEY_VIADMIN, KEY_URL_PROSPECTO};
 
     public MedicamentoAdapterChat(Context context) {
         this.mContext = context;
@@ -30,24 +30,9 @@ public class MedicamentoAdapterChat {
         mDb = mDbHelper.getWritableDatabase();
     }
 
-    /*
-    public MedicamentoAdapterChat(String nombreArchivo, Context mContext) {
-        this.mContext = mContext;
-        try {
-            Class.forName("org.sqlite.JDBC");
-            conexion = DriverManager.getConnection("jdbc:sqlite:" + nombreArchivo);
-            System.out.println("Conexión establecida con éxito.");
-        } catch (Exception e) {
-            System.err.println(e.getClass().getName() + ": " + e.getMessage());
-            System.exit(0);
-        }
-    }
-
-     */
-
     private static class DataBaseHelper extends SQLiteOpenHelper {
         private static final String NOMBRE_BASE_DATOS = "medicamentos.db";
-        private static final int VERSION_BASE_DATOS = 1;
+        private static final int VERSION_BASE_DATOS = 3;
 
         private static final String CREAR_TABLA_MEDICAMENTOS =
                 "CREATE TABLE " + TABLA_MEDICAMENTOS + " ("
@@ -55,7 +40,8 @@ public class MedicamentoAdapterChat {
                         + KEY_NOMBRE + " TEXT NOT NULL, "
                         + KEY_BODY+ " TEXT NOT NULL, "
                         + KEY_PRESCRIPCION + " TEXT NOT NULL, "
-                        + KEY_VIADMIN + " TEXT NOT NULL);";
+                        + KEY_VIADMIN + " TEXT NOT NULL, "
+                        + KEY_URL_PROSPECTO + " TEXT NOT NULL);";
 
         public DataBaseHelper(Context context) {
             super(context, NOMBRE_BASE_DATOS, null, VERSION_BASE_DATOS);
@@ -83,64 +69,29 @@ public class MedicamentoAdapterChat {
         mDbHelper.close();
     }
 
-    /* --------------NO SE PARA QUE SE USAN---------
-    public ResultSet consultar(String consulta) {
-        ResultSet resultado = null;
-        try {
-            Statement sentencia = conexion.createStatement();
-            resultado = sentencia.executeQuery(consulta);
-        } catch (Exception e) {
-            System.err.println(e.getClass().getName() + ": " + e.getMessage());
-            System.exit(0);
-        }
-        return resultado;
-    }
-    public void cerrarConexion() {
-        try {
-            conexion.close();
-            System.out.println("Conexión cerrada con éxito.");
-        } catch (Exception e) {
-            System.err.println(e.getClass().getName() + ": " + e.getMessage());
-            System.exit(0);
-        }
-    }
-
-    public void ejecutar(String instruccion) {
-        try {
-            Statement sentencia = conexion.createStatement();
-            sentencia.executeUpdate(instruccion);
-            sentencia.close();
-        } catch (Exception e) {
-            System.err.println(e.getClass().getName() + ": " + e.getMessage());
-            System.exit(0);
-        }
-    }
-     */
-
-    public long insertarMedicamento(String nombre, String descripcion, String prescripcion, String viaAdmin) {
+    public long insertarMedicamento(String nombre, String descripcion, String prescripcion, String viaAdmin, String url_prospecto) {
         ContentValues valoresIniciales = new ContentValues();
         valoresIniciales.put(KEY_NOMBRE, nombre);
         valoresIniciales.put(KEY_BODY, descripcion);
         valoresIniciales.put(KEY_PRESCRIPCION, prescripcion);
         valoresIniciales.put(KEY_VIADMIN, viaAdmin);
+        valoresIniciales.put(KEY_URL_PROSPECTO, url_prospecto);
         return mDb.insert(TABLA_MEDICAMENTOS, null, valoresIniciales);
     }
 
-    public boolean actualizarMedicamento(long rowId, String nombre, String descripcion, String prescripcion, String viaAdmin) {
+    public boolean actualizarMedicamento(long rowId, String nombre, String descripcion, String prescripcion, String viaAdmin, String url_prospecto) {
         ContentValues valores = new ContentValues();
         valores.put(KEY_NOMBRE, nombre);
         valores.put(KEY_BODY, descripcion);
         valores.put(KEY_PRESCRIPCION, prescripcion);
         valores.put(KEY_VIADMIN, viaAdmin);
-        String where = KEY_ROWID + "=" + rowId;
-        return mDb.update(TABLA_MEDICAMENTOS, valores, where, null) > 0;
+        valores.put(KEY_URL_PROSPECTO, url_prospecto);
+        return mDb.update(TABLA_MEDICAMENTOS, valores, KEY_ROWID + "=" + rowId, null) > 0;
     }
 
-    public boolean borrarMedicamento(long rowId) {
+    public boolean eliminarMedicamento(long rowId) {
         return mDb.delete(TABLA_MEDICAMENTOS, KEY_ROWID + "=" + rowId, null) > 0;
     }
-
-    //---------Metodos opcionales----------------
 
     public Cursor obtenerTodosLosMedicamentos() {
         return mDb.query(TABLA_MEDICAMENTOS, TODOS_CAMPOS, null, null, null, null, null);
@@ -152,6 +103,10 @@ public class MedicamentoAdapterChat {
             mCursor.moveToFirst();
         }
         return mCursor;
+    }
+
+    public boolean borrarTodosLosMedicamentos() {
+        return mDb.delete(TABLA_MEDICAMENTOS, null, null) > 0;
     }
 
     /*
