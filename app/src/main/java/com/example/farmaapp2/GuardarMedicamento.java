@@ -38,7 +38,7 @@ import java.util.Calendar;
 import java.util.Locale;
 import java.util.Random;
 
-
+// ¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡ YA NO SE USA ESTA CLASE !!!!!!!!!!!!!!!
 public class GuardarMedicamento extends AppCompatActivity {
     //implements View.OnClickListener
 
@@ -61,7 +61,7 @@ public class GuardarMedicamento extends AppCompatActivity {
         setContentView(R.layout.resumen_medicamento);
 
        //creamos el adaptador de la BD y la abrimos
-       AdaptadorDB.AdaptadorDBHelper dbHelper = new AdaptadorDB.AdaptadorDBHelper(this);
+       //AdaptadorDB.AdaptadorDBHelper dbHelper = new AdaptadorDB.AdaptadorDBHelper(this);
        /*
        dbAdapter = new MedicamentoAdapter(this);
        dbAdapter.open();

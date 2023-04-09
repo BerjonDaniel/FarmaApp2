@@ -35,10 +35,6 @@
             android:exported="false"
             android:parentActivityName=".MainActivity"
             android:label="GuardarMedicamento2"/>
-        <activity android:name=".CalendarActivity"
-            android:exported="false"
-            android:parentActivityName=".MainActivity"
-            android:label="CalendarActivity"/>
         <activity android:name=".CalendarAdapter"
             android:exported="false"
             android:parentActivityName=".MainActivity"
