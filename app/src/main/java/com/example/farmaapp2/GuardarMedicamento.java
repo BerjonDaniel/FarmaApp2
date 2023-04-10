@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -25,6 +26,7 @@ import android.widget.TimePicker;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
+import androidx.fragment.app.DialogFragment;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -52,7 +54,16 @@ public class GuardarMedicamento extends AppCompatActivity {
     private TextView mBodyText;
     private Long mRowId;
     private MedicamentoAdapter dbAdapter;
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    //FirebaseFirestore db = FirebaseFirestore.getInstance();
+    Calendar c = Calendar.getInstance();
+    int cyear = c.get(Calendar.YEAR);
+    int cmonth = c.get(Calendar.MONTH);
+    int cday = c.get(Calendar.DAY_OF_MONTH);
+    int hour = c.get(Calendar.HOUR_OF_DAY);
+    int minute = c.get(Calendar.MINUTE);
+    int year, month, day, year1, month1, day1;
+    Button timeButton, dateButton, dateButton1, numberButton;
+    private NumberPicker picker1;
 
 
    @Override
@@ -66,11 +77,24 @@ public class GuardarMedicamento extends AppCompatActivity {
        dbAdapter = new MedicamentoAdapter(this);
        dbAdapter.open();
         */
-
-
         Bundle bundle = this.getIntent().getExtras();
         String respuesta = bundle.getString("Result");
         SetPrescriptionData(respuesta);
+
+       //Para las alarmas
+       timeButton = findViewById(R.id.timeButton);
+       dateButton = findViewById(R.id.dateButton);
+       dateButton1 = findViewById(R.id.dateButton1);
+       picker1 = findViewById(R.id.np);
+       picker1.setMaxValue(24);
+       picker1.setMinValue(1);
+       picker1.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+           @Override
+           public void onValueChange(NumberPicker numberPicker, int i, int i1) {
+               int valuePicker1 = picker1.getValue();
+               Log.d("picker value", String.valueOf(valuePicker1));
+           }
+       });
     }
 
 
@@ -144,7 +168,7 @@ public class GuardarMedicamento extends AppCompatActivity {
 
     //----------------------------------Para hacer las barras de seleccion de 1ªToma, Frecuencia y ultima toma ----------------------
 
-   /* EditText primera_toma = (EditText) findViewById(R.id.primeraToma);
+    /*EditText primera_toma = (EditText) findViewById(R.id.primeraToma);
     EditText frecuencia = (EditText) findViewById(R.id.frecuenciaToma);
     EditText ultima_toma = (EditText) findViewById(R.id.ultimaToma);
     @Override
@@ -178,24 +202,14 @@ public class GuardarMedicamento extends AppCompatActivity {
             int day = c.get(Calendar.DAY_OF_MONTH);
             return new DatePickerDialog(getActivity(), listener, year, month, day);
         }
-    }*/
+    }
+
+     */
 
     public void  abrirurl(View view){
-
-
         Uri uri = Uri.parse(url_prospecto); // missing 'http://' will cause crashed
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         startActivity(intent);
-    }
-
-
-    //--------------------Crea Menu de opciones dentro del medicamento------------------------
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Se recrea el menu que aparece en ActionBar de la actividad.
-        getMenuInflater().inflate(R.menu.menu_edit, menu);
-        return true;
     }
 
     /*----------------------Guardar el Medicamento en la Base de Datos-------------------------
@@ -242,6 +256,15 @@ public class GuardarMedicamento extends AppCompatActivity {
         setResult(RESULT_OK);
         dbAdapter.close();
         finish();
+    }
+
+    //--------------------Crea Menu de opciones dentro del medicamento------------------------
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Se recrea el menu que aparece en ActionBar de la actividad.
+        getMenuInflater().inflate(R.menu.menu_edit, menu);
+        return true;
     }
 
 

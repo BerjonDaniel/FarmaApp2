@@ -206,7 +206,7 @@
                         android:layout_marginBottom="20dp"
                         android:gravity="center"
                         android:backgroundTint="@color/corp3"
-                        android:onClick="guardarClickListener"
+                        android:onClick="guardar"
                         android:text="Guardar Medicamento" />
 
                 </LinearLayout>
