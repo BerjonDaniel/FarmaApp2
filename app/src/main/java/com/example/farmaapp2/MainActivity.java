@@ -240,16 +240,19 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         api.execute();
     }
 
-
     private void switchMaintoSettings() {
 
         startActivity(new Intent(MainActivity.this, SettingsActivity.class));
 
     }
-    
+
+    public void openMaps(View view) {
+        // Do something in response to button
+        startActivity(new Intent(MainActivity.this, MapsActivity.class));
+
+    }
 
     //Creamos menu settings con las tres opciones de añadir
-
     public void showsettings(View view) {
         PopupMenu popupsettings = new PopupMenu(this, view);
         popupsettings.setOnMenuItemClickListener(this);
