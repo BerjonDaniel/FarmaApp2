@@ -1,230 +1,147 @@
 package com.example.farmaapp2;
 
-
+import java.sql.*;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
-// ¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡ YA NO SE USA ESTA CLASE !!!!!!!!!!!!!!!
 public class MedicamentoAdapter {
-    private static final String TAG = "APMOV: NotesDbAdapter"; // Usado en los mensajes de Log
-
-    //Nombre de la base de datos, tablas (en este caso una) y versión
-    private static final String DATABASE_NAME = "data";
-    private static final String DATABASE_TABLE = "notes";
-    private static final int DATABASE_VERSION = 2;
-
-    //campos de la tabla de la base de datos
-    public static final String KEY_TITLE = "title";
-    public static final String KEY_BODY = "body";
+    private Connection conexion = null;
+    private static final String TABLA_MEDICAMENTOS = "medicamentos";
     public static final String KEY_ROWID = "_id";
-    //public static final String KEY_PRESCRIPCION = "prescripcion";
-    //public static final String KEY_VIADMIN = "viadministracion";
+    public static final String KEY_NOMBRE = "nombre";
+    public static final String KEY_BODY = "descripcion";
+    public static final String KEY_PRESCRIPCION = "prescripcion";
+    public static final String KEY_VIADMIN = "via_administracion";
+    public static final String KEY_URL_PROSPECTO = "url_prospecto";
 
-    // Sentencia SQL para crear las tablas de las bases de datos
-
-    private static final String DATABASE_CREATE = "create table " + DATABASE_TABLE + " (" +
-            KEY_ROWID +" integer primary key autoincrement, " +
-            KEY_TITLE +" text not null, " +
-            KEY_BODY + " text not null);";
-    /*
-    private static final String DATABASE_CREATE = "create table " + DATABASE_TABLE + " (" +
-            KEY_ROWID +" integer primary key autoincrement, " +
-            KEY_TITLE +" text not null, " +
-            KEY_BODY + " text not null, " +
-            KEY_PRESCRIPCION + " text not null, " +
-            KEY_VIADMIN + " text not null);";
-    */
-
-    private DatabaseHelper mDbHelper;
+    private DataBaseHelper mDbHelper;
     private SQLiteDatabase mDb;
-    private final Context mCtx;
+    private final Context mContext;
 
-    private static class DatabaseHelper extends SQLiteOpenHelper {
+    private static final String[] TODOS_CAMPOS = {KEY_ROWID, KEY_NOMBRE, KEY_BODY, KEY_PRESCRIPCION, KEY_VIADMIN, KEY_URL_PROSPECTO};
 
-        DatabaseHelper(Context context) {
-            super(context, DATABASE_NAME, null, DATABASE_VERSION);
+    public MedicamentoAdapter(Context context) {
+        this.mContext = context;
+        mDbHelper = new DataBaseHelper(context);
+        mDb = mDbHelper.getWritableDatabase();
+    }
+
+    private static class DataBaseHelper extends SQLiteOpenHelper {
+        private static final String NOMBRE_BASE_DATOS = "medicamentos.db";
+        private static final int VERSION_BASE_DATOS = 3;
+
+        private static final String CREAR_TABLA_MEDICAMENTOS =
+                "CREATE TABLE " + TABLA_MEDICAMENTOS + " ("
+                        + KEY_ROWID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                        + KEY_NOMBRE + " TEXT NOT NULL, "
+                        + KEY_BODY+ " TEXT NOT NULL, "
+                        + KEY_PRESCRIPCION + " TEXT NOT NULL, "
+                        + KEY_VIADMIN + " TEXT NOT NULL, "
+                        + KEY_URL_PROSPECTO + " TEXT NOT NULL);";
+
+        public DataBaseHelper(Context context) {
+            super(context, NOMBRE_BASE_DATOS, null, VERSION_BASE_DATOS);
         }
 
         @Override
         public void onCreate(SQLiteDatabase db) {
-            db.execSQL(DATABASE_CREATE);
+            db.execSQL(CREAR_TABLA_MEDICAMENTOS);
         }
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            Log.w(TAG, "Upgrading database from version " + oldVersion + " to "
-                    + newVersion + ", which will destroy all old data");
-            db.execSQL("DROP TABLE IF EXISTS " + DATABASE_TABLE);
+            db.execSQL("DROP TABLE IF EXISTS " + TABLA_MEDICAMENTOS);
             onCreate(db);
         }
     }
 
-    /**
-     * Constructor - takes the context to allow the database to be
-     * opened/created
-     *
-     * @param ctx the Context within which to work
-     */
-
-    public MedicamentoAdapter(Context ctx) {
-        this.mCtx = ctx;
-    }
-
-    /**
-     * Open the notes database. If it cannot be opened, try to create a new
-     * instance of the database. If it cannot be created, throw an exception to
-     * signal the failure
-     *
-     * @return this (self reference, allowing this to be chained in an
-     *         initialization call)
-     * @throws SQLException if the database could be neither opened or created
-     */
-    public MedicamentoAdapter open() throws SQLException {
-        mDbHelper = new DatabaseHelper(mCtx);
+    public MedicamentoAdapter abrir() throws SQLException {
+        mDbHelper = new DataBaseHelper(mContext);
         mDb = mDbHelper.getWritableDatabase();
         return this;
     }
 
-    public void close() {
+    public void cerrar() {
         mDbHelper.close();
     }
 
-
-    /**
-     * Create a new note using the title and body provided. If the note is
-     * successfully created return the new rowId for that note, otherwise return
-     * a -1 to indicate failure.
-     *
-     * @param title the title of the note
-     * @param body the body of the note
-     * @return rowId or -1 if failed
-     */
-    public long createNote(String title, String body) {
-        ContentValues initialValues = new ContentValues();
-        initialValues.put(KEY_TITLE, title);
-        initialValues.put(KEY_BODY, body);
-
-        return mDb.insert(DATABASE_TABLE, null, initialValues);
-    }
-    /*
-    public long createNote(String title, String body, String prescripcion, String viadministracion) {
-        ContentValues initialValues = new ContentValues();
-        initialValues.put(KEY_TITLE, title);
-        initialValues.put(KEY_BODY, body);
-        initialValues.put(KEY_PRESCRIPCION,prescripcion);
-        initialValues.put(KEY_VIADMIN,viadministracion);
-
-        return mDb.insert(DATABASE_TABLE, null, initialValues);
+    public long insertarMedicamento(String nombre, String descripcion, String prescripcion, String viaAdmin, String url_prospecto) {
+        ContentValues valoresIniciales = new ContentValues();
+        valoresIniciales.put(KEY_NOMBRE, nombre);
+        valoresIniciales.put(KEY_BODY, descripcion);
+        valoresIniciales.put(KEY_PRESCRIPCION, prescripcion);
+        valoresIniciales.put(KEY_VIADMIN, viaAdmin);
+        valoresIniciales.put(KEY_URL_PROSPECTO, url_prospecto);
+        return mDb.insert(TABLA_MEDICAMENTOS, null, valoresIniciales);
     }
 
-     */
-
-    /**
-     * Delete the note with the given rowId
-     *
-     * @param rowId id of note to delete
-     * @return true if deleted, false otherwise
-     */
-    public boolean deleteNote(long rowId) {
-        return mDb.delete(DATABASE_TABLE, KEY_ROWID + "=" + rowId, null) > 0;
+    public boolean actualizarMedicamento(long rowId, String nombre, String descripcion, String prescripcion, String viaAdmin, String url_prospecto) {
+        ContentValues valores = new ContentValues();
+        valores.put(KEY_NOMBRE, nombre);
+        valores.put(KEY_BODY, descripcion);
+        valores.put(KEY_PRESCRIPCION, prescripcion);
+        valores.put(KEY_VIADMIN, viaAdmin);
+        valores.put(KEY_URL_PROSPECTO, url_prospecto);
+        return mDb.update(TABLA_MEDICAMENTOS, valores, KEY_ROWID + "=" + rowId, null) > 0;
     }
 
-    /**
-     * Return a Cursor over the list of all notes in the database
-     *
-     * @return Cursor over all notes
-     */
-    public Cursor fetchAllNotes() {
-
-        return mDb.query(DATABASE_TABLE, new String[] {KEY_ROWID, KEY_TITLE,
-                KEY_BODY}, null, null, null, null, null);
-    }
-    /*
-    public Cursor fetchAllNotes() {
-
-        return mDb.query(DATABASE_TABLE, new String[] {KEY_ROWID, KEY_TITLE,
-                KEY_BODY, KEY_PRESCRIPCION, KEY_VIADMIN}, null, null, null, null, null);
+    public boolean eliminarMedicamento(long rowId) {
+        return mDb.delete(TABLA_MEDICAMENTOS, KEY_ROWID + "=" + rowId, null) > 0;
     }
 
-     */
+    public Cursor obtenerTodosLosMedicamentos() {
+        return mDb.query(TABLA_MEDICAMENTOS, TODOS_CAMPOS, null, null, null, null, null);
+    }
 
-    /**
-     * Return a Cursor positioned at the note that matches the given rowId
-     *
-     * @param rowId id of note to retrieve
-     * @return Cursor positioned to matching note, if found
-     * @throws SQLException if note could not be found/retrieved
-     */
-    public Cursor fetchNote(long rowId) throws SQLException {
-
-        Cursor mCursor =
-
-                mDb.query(true, DATABASE_TABLE, new String[] {KEY_ROWID,
-                                KEY_TITLE, KEY_BODY}, KEY_ROWID + "=" + rowId, null,
-                        null, null, null, null);
+    public Cursor obtenerMedicamento(long rowId) throws SQLException {
+        Cursor mCursor = mDb.query(true, TABLA_MEDICAMENTOS, TODOS_CAMPOS, KEY_ROWID + "=" + rowId, null, null, null, null, null);
         if (mCursor != null) {
             mCursor.moveToFirst();
         }
         return mCursor;
-
     }
+
+    public boolean borrarTodosLosMedicamentos() {
+        return mDb.delete(TABLA_MEDICAMENTOS, null, null) > 0;
+    }
+
     /*
-    public Cursor fetchNote(long rowId) throws SQLException {
-
-        Cursor mCursor =
-
-                mDb.query(true, DATABASE_TABLE, new String[] {KEY_ROWID,
-                                KEY_TITLE, KEY_BODY, KEY_PRESCRIPCION, KEY_VIADMIN}, KEY_ROWID + "=" + rowId, null,
-                        null, null, null, null);
-        if (mCursor != null) {
-            mCursor.moveToFirst();
-        }
-        return mCursor;
-
+    ------------Otra opción de como hacerlo----------------
+    public void insertarMedicamento(String nombre, String descripcion, String prescripcion, String via_administracion) {
+        String insertarMedicamento = "INSERT INTO " + TABLA_MEDICAMENTOS + " (" +
+                KEY_NOMBRE + ", " + KEY_BODY + ", " + KEY_PRESCRIPCION + ", " + KEY_VIADMIN +
+                ") VALUES ('" + nombre + "', '" + descripcion + "', '" + prescripcion + "', '" + via_administracion + "')";
+        ejecutar(insertarMedicamento);
     }
 
-     */
-
-    /**
-     * Update the note using the details provided. The note to be updated is
-     * specified using the rowId, and it is altered to use the title and body
-     * values passed in
-     *
-     * @param rowId id of note to update
-     * @param title value to set note title to
-     * @param body value to set note body to
-     * @return true if the note was successfully updated, false otherwise
-     */
-    /*public boolean updateNoteFromEdit(long rowId, String title, String body) {
-        ContentValues args = new ContentValues();
-        args.put(KEY_TITLE, title);
-        args.put(KEY_BODY, body);
-
-        return mDb.update(DATABASE_TABLE, args, KEY_ROWID + "=" + rowId, null) > 0;
-    }*/
-
-    public boolean updateNote(long rowId, String title, String body) {
-        ContentValues args = new ContentValues();
-        args.put(KEY_TITLE, title);
-        args.put(KEY_BODY, body);
-
-        return mDb.update(DATABASE_TABLE, args, KEY_ROWID + "=" + rowId, null) > 0;
+    public void actualizarMedicamento(long rowId, String nombre, String descripcion, String prescripcion, String viaAdmin) {
+        ContentValues valores = new ContentValues();
+        valores.put(KEY_NOMBRE, nombre);
+        valores.put(KEY_BODY, descripcion);
+        valores.put(KEY_PRESCRIPCION, prescripcion);
+        valores.put(KEY_VIADMIN, viaAdmin);
+        String where = KEY_ROWID + "=" + rowId;
+        SQLiteDatabase db = getWritableDatabase();
+        db.update(TABLA_MEDICAMENTOS, valores, where, null);
     }
-    /*
-    public boolean updateNote(long rowId, String title, String body, String prescripcion, String viadministracion) {
-        ContentValues args = new ContentValues();
-        args.put(KEY_TITLE, title);
-        args.put(KEY_BODY, body);
-        args.put(KEY_PRESCRIPCION,prescripcion);
-        args.put(KEY_VIADMIN,viadministracion);
 
-        return mDb.update(DATABASE_TABLE, args, KEY_ROWID + "=" + rowId, null) > 0;
+    public void actualizarMedicamento(long rowId, String nombre, String descripcion, String prescripcion, String via_administracion) {
+        String actualizarMedicamento = "UPDATE " + TABLA_MEDICAMENTOS + " SET " +
+                KEY_NOMBRE + "='" + nombre + "', " +
+                KEY_BODY + "='" + descripcion + "', " +
+                KEY_PRESCRIPCION + "='" + prescripcion + "', " +
+                KEY_VIADMIN + "='" + via_administracion + "' WHERE " + KEY_ROWID + "=" + rowId;
+        ejecutar(actualizarMedicamento);
+    }
+
+    public void eliminarMedicamento(long rowId) {
+        String eliminarMedicamento = "DELETE FROM " + TABLA_MEDICAMENTOS + " WHERE " + KEY_ROWID + "=" + rowId;
+        ejecutar(eliminarMedicamento);
     }
      */
-
 }
+

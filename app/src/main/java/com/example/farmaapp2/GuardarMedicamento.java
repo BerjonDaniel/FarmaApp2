@@ -1,44 +1,24 @@
 package com.example.farmaapp2;
 
 
-import android.app.AlarmManager;
-import android.app.DatePickerDialog;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.app.TimePickerDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.DatePicker;
-import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.TextView;
-import android.widget.TimePicker;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationCompat;
-import androidx.fragment.app.DialogFragment;
-
-import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Locale;
-import java.util.Random;
 
 // ¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡ YA NO SE USA ESTA CLASE !!!!!!!!!!!!!!!
 public class GuardarMedicamento extends AppCompatActivity {
@@ -53,7 +33,7 @@ public class GuardarMedicamento extends AppCompatActivity {
     private TextView mTitleText;
     private TextView mBodyText;
     private Long mRowId;
-    private MedicamentoAdapter dbAdapter;
+    private MedicamentoAdapterDesuso dbAdapter;
     //FirebaseFirestore db = FirebaseFirestore.getInstance();
     Calendar c = Calendar.getInstance();
     int cyear = c.get(Calendar.YEAR);

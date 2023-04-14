@@ -20,8 +20,6 @@ import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
@@ -32,9 +30,6 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.time.LocalDate;
-import java.time.YearMonth;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 
@@ -46,7 +41,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     private ArrayList<String> resultado = new ArrayList<String>();
     private EditText codigo_nacional;
 
-    private MedicamentoAdapterChat dbAdapter;
+    private MedicamentoAdapter dbAdapter;
     private ListView m_listview;
 
 
@@ -60,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         setContentView(R.layout.activity_notepad);
 
         //creamos el adaptador de la BD y la abrimos
-        dbAdapter = new MedicamentoAdapterChat(this);
+        dbAdapter = new MedicamentoAdapter(this);
         dbAdapter.abrir();
 
         // Creamos un listview que va a contener el título de todas las notas y
@@ -89,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         Cursor notesCursor = dbAdapter.obtenerTodosLosMedicamentos();
 
         // Creamos un array con los campos que queremos mostrar en el listview (sólo el título de la nota)
-        String[] from = new String[]{MedicamentoAdapterChat.KEY_NOMBRE};
+        String[] from = new String[]{MedicamentoAdapter.KEY_NOMBRE};
 
         // array con los campos que queremos ligar a los campos del array de la línea anterior (en este caso sólo text1)
         int[] to = new int[]{R.id.text1};

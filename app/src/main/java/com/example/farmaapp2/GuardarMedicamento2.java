@@ -15,27 +15,18 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -43,9 +34,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Random;
 
 public class GuardarMedicamento2 extends AppCompatActivity {
@@ -59,7 +48,7 @@ public class GuardarMedicamento2 extends AppCompatActivity {
     private Button btnGuardar;
     String error;
 
-    private MedicamentoAdapterChat medicamentoAdapterChat;
+    private MedicamentoAdapter medicamentoAdapter;
     //FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     //variables para las alarmas
@@ -78,7 +67,7 @@ public class GuardarMedicamento2 extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.resumen_medicamento);
 
-        medicamentoAdapterChat = new MedicamentoAdapterChat(this);
+        medicamentoAdapter = new MedicamentoAdapter(this);
 
         try { //Accederemos aquí de dos formas: 1. Al escanear un medicamento
               //                                2. Al pulsar un medicamento en la lista
@@ -89,7 +78,7 @@ public class GuardarMedicamento2 extends AppCompatActivity {
             }else if(bundle.getLong("RowId") != 0){// ---- Caso 2
                 Long respuesta = bundle.getLong("RowId");
                 Log.d(TAG, "La respuesta obtenida es: " + respuesta); // Imprimir la cadena en el registro
-                Cursor cursor = medicamentoAdapterChat.obtenerMedicamento(respuesta);
+                Cursor cursor = medicamentoAdapter.obtenerMedicamento(respuesta);
                 StringBuilder cursorAsString = new StringBuilder();
                 cursorAsString.append("{");
                 if (cursor.moveToFirst()) { //Convertimos de esta forma el cursor a String
@@ -378,7 +367,7 @@ public class GuardarMedicamento2 extends AppCompatActivity {
         }
         // Creamos un objeto Medicamento con los datos del medicamento
         // Insertamos el medicamento en la base de datos
-        long id = medicamentoAdapterChat.insertarMedicamento(nombre, descripcion, cPresc, viaAdmin, urlProspecto);
+        long id = medicamentoAdapter.insertarMedicamento(nombre, descripcion, cPresc, viaAdmin, urlProspecto);
         if (id != -1) {
             Toast.makeText(this, "Medicamento guardado correctamente", Toast.LENGTH_SHORT).show();
         } else {
