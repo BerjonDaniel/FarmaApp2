@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         m_listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        Intent i = new Intent(MainActivity.this, GuardarMedicamento2.class);
+                        Intent i = new Intent(MainActivity.this, GuardarMedicamento.class);
                         i.putExtra("RowId", id);
                         startActivity(i);
                     }
@@ -161,7 +161,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     }
     private void switchMaintoBarCode(String result) {
         // Creamos el Intent que va a lanzar la activity de editar medicamento (ApiCodeBar)
-        Intent intent = new Intent(this, GuardarMedicamento2.class);
+        Intent intent = new Intent(this, GuardarMedicamento.class);
         startActivityForResult(intent, 1);
         // Creamos la informacion a pasar entre actividades
         //Bundle b = new Bundle();

@@ -33,11 +33,11 @@
             android:exported="false"
             android:label="activity_settings"
             />
-        <activity android:name=".GuardarMedicamento"
+        <activity android:name=".GuardarMedicamentoDesuso"
             android:exported="false"
             android:parentActivityName=".MainActivity"
             android:label="GuardarMedicamento"/>
-        <activity android:name=".GuardarMedicamento2"
+        <activity android:name=".GuardarMedicamento"
             android:exported="false"
             android:parentActivityName=".MainActivity"
             android:label="GuardarMedicamento2"/>
