@@ -11,7 +11,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.SimpleCursorAdapter;
@@ -213,7 +212,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
             case R.id.action_settings:
                 Toast.makeText(this, "setings", Toast.LENGTH_SHORT);
-                switchMaintoSettings();
+                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
                 return true;
             default:
 
@@ -240,12 +239,6 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         api.execute();
     }
 
-    private void switchMaintoSettings() {
-
-        startActivity(new Intent(MainActivity.this, SettingsActivity.class));
-
-    }
-
     public void openMaps(View view) {
         // Do something in response to button
         startActivity(new Intent(MainActivity.this, MapsActivity.class));
@@ -256,7 +249,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     public void showsettings(View view) {
         PopupMenu popupsettings = new PopupMenu(this, view);
         popupsettings.setOnMenuItemClickListener(this);
-        popupsettings.inflate(R.menu.menu_settings);
+        popupsettings.inflate(R.menu.popup_settings);
         popupsettings.show();
 
     }

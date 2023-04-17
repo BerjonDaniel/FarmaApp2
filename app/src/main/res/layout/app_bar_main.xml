@@ -9,16 +9,6 @@
     tools:layout_centerHorizontal="false"
     >
 
-
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appBarLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/Theme.Pharminder_2_0.AppBarOverlay">
-
-    </com.google.android.material.appbar.AppBarLayout>
-
-
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/button"
         android:layout_width="wrap_content"

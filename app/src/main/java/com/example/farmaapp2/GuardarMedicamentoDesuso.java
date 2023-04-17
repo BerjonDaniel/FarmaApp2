@@ -243,7 +243,7 @@ public class GuardarMedicamentoDesuso extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Se recrea el menu que aparece en ActionBar de la actividad.
-        getMenuInflater().inflate(R.menu.menu_edit, menu);
+        getMenuInflater().inflate(R.menu.popup_borrar_medicamento, menu);
         return true;
     }
 

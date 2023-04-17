@@ -10,16 +10,7 @@
     tools:showIn="@layout/app_bar_main">
 
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appBarLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/Theme.Pharminder_2_0.AppBarOverlay">
-
-    </com.google.android.material.appbar.AppBarLayout>
-
-
-
+    <!--
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
@@ -27,7 +18,8 @@
         android:background="@color/white"
         app:layout_anchor="@+id/appBarLayout"
         app:layout_anchorGravity="center"
-        app:popupTheme="@style/Theme.Pharminder_2_0.PopupOverlay" />
+        app:popupTheme="@style/Theme.FarmaApp2.PopupOverlay" />
+    -->
 
     <ImageView
         android:id="@+id/imageView3"

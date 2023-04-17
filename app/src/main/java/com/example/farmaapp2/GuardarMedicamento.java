@@ -15,6 +15,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -505,6 +506,13 @@ public class GuardarMedicamento extends AppCompatActivity {
         Uri uri = Uri.parse(url_prospecto); // missing 'http://' will cause crashed
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         startActivity(intent);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Se recrea el menu que aparece en ActionBar de la actividad.
+        getMenuInflater().inflate(R.menu.popup_borrar_medicamento, menu);
+        return true;
     }
 
     //Para poder poner Alarmas
