@@ -8,6 +8,7 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
     <include layout="@layout/app_bar_main" />
+    <!--
     <LinearLayout
         android:id="@+id/dim_layout"
         android:layout_width="match_parent"
@@ -17,6 +18,7 @@
         tools:ignore="Orientation" >
 
     </LinearLayout>
+    -->
     <ListView
         android:id="@+id/id_list_view"
         android:layout_width="fill_parent"
@@ -40,14 +42,7 @@
         android:layout_marginTop="100dp"
         android:gravity="center|top"
        />
-    <!--
-    <include layout="@layout/calendar"/>
-    <CalendarView
-        android:id="@+id/calendarView"
-        android:layout_width="match_parent"
-        android:layout_height="308dp"
-        android:layout_marginTop="120dp" />
-    -->
+
 
 
 </FrameLayout>

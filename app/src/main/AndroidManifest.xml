@@ -49,14 +49,6 @@
                 <action android:name="@strings/alarm" />
             </intent-filter>
         </receiver>
-        <activity android:name=".CalendarAdapter"
-            android:exported="false"
-            android:parentActivityName=".MainActivity"
-            android:label="CalendarAdapter"/>
-        <activity android:name=".CalendarViewHolder"
-            android:exported="false"
-            android:parentActivityName=".MainActivity"
-            android:label="CalendarViewHolder"/>
         <activity
             android:name="com.journeyapps.barcodescanner.CaptureActivity"
             android:screenOrientation="portrait"

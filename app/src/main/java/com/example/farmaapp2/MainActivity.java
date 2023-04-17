@@ -180,8 +180,11 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         popup.setOnMenuItemClickListener(this);
         popup.inflate(R.menu.popupmenu);
         popup.show();
+        /*
         LinearLayout dim_layout = (LinearLayout) findViewById(R.id.dim_layout);
         dim_layout.setVisibility(View.VISIBLE);
+
+         */
 
     }
 
@@ -190,9 +193,11 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     public boolean onMenuItemClick(MenuItem item) {
 
         /* ESto no funciona del todo porque cuando pulsas fuera no vuelve a iluminarse*/
-
+        /*
         LinearLayout dim_layout = (LinearLayout) findViewById(R.id.dim_layout);
         dim_layout.setVisibility(View.INVISIBLE);
+
+         */
 
         switch (item.getItemId()) {
             case R.id.item1:
@@ -207,7 +212,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
 
             case R.id.action_settings:
-                Toast.makeText(this, "setiings", Toast.LENGTH_SHORT);
+                Toast.makeText(this, "setings", Toast.LENGTH_SHORT);
                 switchMaintoSettings();
                 return true;
             default:
