@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.PopupMenu;
@@ -17,11 +18,13 @@ import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -30,6 +33,7 @@ import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 
 public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
@@ -39,10 +43,12 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     private TextView tvBarCode;
     private ArrayList<String> resultado = new ArrayList<String>();
     private EditText codigo_nacional;
+    private int Numero_de_Digitos = 6;
 
     private MedicamentoAdapter dbAdapter;
     private ListView m_listview;
-
+    private CalendarView calendarView;
+    private TextView diaSeleccionado;
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -56,6 +62,27 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         //creamos el adaptador de la BD y la abrimos
         dbAdapter = new MedicamentoAdapter(this);
         dbAdapter.abrir();
+
+        //Para mostrar encima del ListView el dia que hemos seleccionado
+        calendarView = findViewById(R.id.calendarView);
+        calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+            @Override
+            public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
+                // Aquí obtengo la fecha seleccionada (year, month, dayOfMonth)
+                // y así poder mostrar la información correspondiente en ese día del mes
+                showEventDetails(dayOfMonth, month + 1, year);
+            }
+        });
+
+        // Obtener la fecha actual, para que segun abramos la app
+        // aparezca el dia y mes actual
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+
+        // Mostrar detalles del evento para la fecha actual
+        showEventDetails(dayOfMonth, month, year);
 
         // Creamos un listview que va a contener el título de todas las notas y
         // en el que cuando pulsemos sobre un título lancemos una actividad de editar
@@ -71,8 +98,6 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                     }
                 }
         );
-
-
 
         // rellenamos el listview con los títulos de todas las notas en la BD
         fillData();
@@ -94,83 +119,14 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         m_listview.setAdapter(notes);
     }
 
-    //-------------------Escaneo Cod-Barras y Busqueda en Api------------------------------
-
-    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        super.onActivityResult(requestCode, resultCode, intent);
-        //fillData();
-
-        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent );
-        if(result != null)
-            if (result.getContents() != null){
-                String resultindex = result.getContents().substring(6,12);
-                tvBarCode = findViewById(R.id.resultado);
-
-                APIFromCIMATask api = new APIFromCIMATask();
-                api.cn = resultindex;
-                api.execute();
-
-                tvBarCode.setText("El Código Nacional es: " + resultindex + "\n Cargando... Espere");
-            }else{
-                Toast.makeText(this, "Scanning cancelled", Toast.LENGTH_LONG).show();
-            }
+    //Mostraremos el dia seleccionado en la pantalla principal
+    private void showEventDetails(int day, int month, int year) {
+        String[] monthNames = {"enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"};
+        String monthName = monthNames[month - 1];
+        diaSeleccionado = findViewById(R.id.diaSeleccionado);
+        diaSeleccionado.setText( day + "/" + monthName);
     }
 
-
-
-    private class APIFromCIMATask extends AsyncTask<String, String, String> {
-
-        String cn;
-        String response;
-
-        @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-        protected String doInBackground(String... urls) {
-            // We make the connection
-            try {
-                // Creamos la conexión
-                URL url = new URL(API_URL + "?cn=" + cn);
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-
-                conn.setRequestMethod("GET");
-                conn.setRequestProperty("Content-Type", "application/json");
-//                conn.setRequestProperty("Content-Length", String.valueOf(postDataBytes.length));
-//                conn.setDoOutput(true);
-
-                Reader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
-                response = "";
-
-                for (int c; (c = in.read()) >= 0; )
-                    response += (char) c;
-
-            } catch (IOException e) {
-                e.printStackTrace();
-                response = "ERROR: " + e.getLocalizedMessage();
-            }
-
-//            SetPrescriptionData(response);
-            Log.i("RECEIVED", response);
-
-            return response;
-        }
-
-        protected void onPostExecute(String result){
-            switchMaintoBarCode(response);
-        }
-
-    }
-    private void switchMaintoBarCode(String result) {
-        // Creamos el Intent que va a lanzar la activity de editar medicamento (ApiCodeBar)
-        Intent intent = new Intent(this, GuardarMedicamento.class);
-        startActivityForResult(intent, 1);
-        // Creamos la informacion a pasar entre actividades
-        //Bundle b = new Bundle();
-        //b.putString("result", result);
-
-        // Asociamos esta informacion al intent
-        intent.putExtra("Result", result);
-        // Iniciamos la nueva actividad
-        startActivity(intent);
-    }
 
     //---------------------Creamos menu con las tres opciones de añadir------------------
 
@@ -219,13 +175,116 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 return false;
         }
     }
-    //menu para setting
 
 
     public void  escanear(){
         IntentIntegrator integrator = new IntentIntegrator(this);
         integrator.initiateScan();
     }
+
+    //-------------------Escaneo Cod-Barras y Busqueda en Api------------------------------
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+        //fillData();
+
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent );
+        if(result != null)
+
+            if (result.getContents() != null){
+                String resultindex = result.getContents().substring(6,12);
+                tvBarCode = findViewById(R.id.resultado);
+
+                if (resultindex.length() == 6) {
+                    APIFromCIMATask api = new APIFromCIMATask();
+                    api.cn = resultindex;
+                    api.execute();
+
+                    tvBarCode.setText("El Código Nacional es: " + resultindex + "\n Cargando... Espere");
+                }
+                /*else{
+                    Toast.makeText(this, "Código no válido", Toast.LENGTH_LONG).show();
+                    tvBarCode.setText("");
+                }
+
+                 */
+
+            }else{
+                Toast.makeText(this, "Scanning cancelled", Toast.LENGTH_LONG).show();
+            }
+    }
+
+
+
+    private class APIFromCIMATask extends AsyncTask<String, String, String> {
+
+        String cn;
+        String response;
+
+        @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+        protected String doInBackground(String... urls) {
+            // We make the connection
+            try {
+                // Creamos la conexión
+                URL url = new URL(API_URL + "?cn=" + cn);
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+                conn.setRequestMethod("GET");
+                conn.setRequestProperty("Content-Type", "application/json");
+//                conn.setRequestProperty("Content-Length", String.valueOf(postDataBytes.length));
+//                conn.setDoOutput(true);
+
+                Reader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
+                response = "";
+
+                for (int c; (c = in.read()) >= 0; )
+                    response += (char) c;
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                //response = "ERROR: " + e.getLocalizedMessage();
+                response = "ERROR";
+                Log.i("RECEIVED", response);
+            }
+
+//            SetPrescriptionData(response);
+            Log.i("RECEIVED", response);
+
+            return response;
+        }
+
+        protected void onPostExecute(String result){
+            switchMaintoBarCode(response);
+        }
+
+    }
+    private void switchMaintoBarCode(String result) {
+
+        if(result!="ERROR"){
+            // Creamos el Intent que va a lanzar la activity de editar medicamento (ApiCodeBar)
+            Intent intent = new Intent(this, GuardarMedicamento.class);
+            startActivityForResult(intent, 1);
+            // Creamos la informacion a pasar entre actividades
+            //Bundle b = new Bundle();
+            //b.putString("result", result);
+
+            // Asociamos esta informacion al intent
+            intent.putExtra("Result", result);
+            // Iniciamos la nueva actividad
+            startActivity(intent);
+        }else{
+            Toast.makeText(this, "El codigo introducido no es válido", Toast.LENGTH_LONG).show();
+            tvBarCode.setText("");
+            /*
+            tvBarCode.findViewById(R.id.resultado);
+            tvBarCode.setText("El codigo introducido no es válido");
+             */
+
+        }
+
+    }
+
+    //-------------------Busqueda manual por Codigo Nacional------------------------------
     private void createNoteFromCN() {
         /*Intent i = new Intent(this, com.example.pharminder_2_0.EditActivity.class);
         startActivityForResult(i, 1);*/
@@ -234,14 +293,23 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     public void createNoteFromCN(View view){
         codigo_nacional = (EditText) findViewById(R.id.title_cn);
         String codigonacional = codigo_nacional.getText().toString();
-        APIFromCIMATask api = new APIFromCIMATask();
-        api.cn = codigonacional;
-        api.execute();
+
+        if(codigonacional != null){
+            if(codigonacional.length() == Numero_de_Digitos){
+                APIFromCIMATask api = new APIFromCIMATask();
+                api.cn = codigonacional;
+                api.execute();
+            }else{
+                Toast.makeText(this, "Introduzca un código válido", Toast.LENGTH_LONG).show();
+            }
+        }else{
+            Toast.makeText(this, "Introduzca un código válido", Toast.LENGTH_LONG).show();
+        }
     }
 
     public void openMaps(View view) {
         // Do something in response to button
-        startActivity(new Intent(MainActivity.this, MapsActivity.class));
+        startActivity(new Intent(MainActivity.this, MapsActivity2.class));
 
     }
 

@@ -19,14 +19,31 @@
 
     </LinearLayout>
     -->
+    <LinearLayout
+        android:layout_width="100dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="440dp"
+        android:layout_marginLeft="20dp">
+
+        <TextView
+            android:id="@+id/diaSeleccionado"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:gravity="center|left"
+            android:textSize="12dp"
+            android:textColor="@color/grisClaro"
+            android:text="" />
+
+    </LinearLayout>
     <ListView
         android:id="@+id/id_list_view"
-        android:layout_width="fill_parent"
+        android:layout_width="370dp"
         android:layout_height="279dp"
         android:layout_gravity="center"
         android:layout_marginTop="150dp"
         android:textAlignment="center"
-        android:divider="@color/blackclaro"
+        android:divider="@color/grisClaro"
         android:dividerHeight="1.0sp"
         />
 

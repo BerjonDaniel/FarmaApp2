@@ -114,7 +114,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Pedimos el objeto GoogleMap de forma asíncrona:
         // lo recibiremos en OnMapReadyCallback.onMapReady()
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.mapfrag);
+                .findFragmentById(R.id.mapsView);
         mapFragment.getMapAsync(this);
 
     }
