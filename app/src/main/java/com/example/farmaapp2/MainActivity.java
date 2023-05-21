@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -46,9 +45,14 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     private int Numero_de_Digitos = 6;
 
     private MedicamentoAdapter dbAdapter;
+    private DateAdapterDesuso dbDateAdapter;
     private ListView m_listview;
     private CalendarView calendarView;
     private TextView diaSeleccionado;
+    private TextView diaActual;
+    private String yearToString;
+    private String monthToString;
+    private String dayToString;
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -65,13 +69,16 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
         //Para mostrar encima del ListView el dia que hemos seleccionado
         calendarView = findViewById(R.id.calendarView);
-        calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
-            @Override
-            public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
-                // Aquí obtengo la fecha seleccionada (year, month, dayOfMonth)
-                // y así poder mostrar la información correspondiente en ese día del mes
-                showEventDetails(dayOfMonth, month + 1, year);
-            }
+        calendarView.setOnDateChangeListener((view, year, month, dayOfMonth) -> {
+            // Aquí obtengo la fecha seleccionada (year, month, dayOfMonth)
+            // y así poder mostrar la información correspondiente en ese día del mes
+            showEventDetail(dayOfMonth, month + 1, year);
+
+            yearToString = Integer.toString(year);
+            monthToString = Integer.toString(month + 1);
+            dayToString = Integer.toString(dayOfMonth);
+            //Cursor cursor = dbDateAdapter.getMedicationsByDate(yearToString + "-" + monthToString + "-" + dayToString);
+            //fillDataByDate(yearToString, monthToString, dayToString);
         });
 
         // Obtener la fecha actual, para que segun abramos la app
@@ -82,28 +89,45 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
 
         // Mostrar detalles del evento para la fecha actual
-        showEventDetails(dayOfMonth, month, year);
+        showEventDetail(dayOfMonth, month + 1, year);
+        diaActual = findViewById(R.id.actualDate);
+        diaActual.setText("" + dayOfMonth);
 
         // Creamos un listview que va a contener el título de todas las notas y
         // en el que cuando pulsemos sobre un título lancemos una actividad de editar
         // la nota con el id correspondiente
 
-        m_listview = (ListView) findViewById(R.id.id_list_view);
-        m_listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        Intent i = new Intent(MainActivity.this, GuardarMedicamento.class);
-                        i.putExtra("RowId", id);
-                        startActivity(i);
-                    }
-                }
-        );
+        m_listview = findViewById(R.id.id_list_view);
+        m_listview.setOnItemClickListener((parent, view, position, id) -> {
+            Intent i = new Intent(MainActivity.this, GuardarMedicamento.class);
+            i.putExtra("RowId", id);
+            startActivity(i);
+        });
+
+
 
         // rellenamos el listview con los títulos de todas las notas en la BD
         fillData();
 
     }
 
+    //fillData con todos los medicamentos de un solo dia
+    private void fillDataByDate(String year, String month, String dayOfMonth){
+        Cursor daysCursor = dbAdapter.getMedicationsByDate(year + "-" + month + "-" + dayOfMonth);
+
+        // Creamos un array con los campos que queremos mostrar en el listview (sólo el título de la nota y hora)
+        String[] from = new String[]{MedicamentoAdapter.KEY_NOMBRE, MedicamentoAdapter.COLUMN_TIME};
+
+        // array con los campos que queremos ligar a los campos del array de la línea anterior (en este caso sólo text1)
+        int[] to = new int[]{R.id.text1,R.id.hour1};
+
+        // Creamos un SimpleCursorAdapter y lo asignamos al listview para mostrarlo
+        SimpleCursorAdapter daysNotes =
+                new SimpleCursorAdapter(this, R.layout.notes_row, daysCursor, from, to, 0);
+        m_listview.setAdapter(daysNotes);
+    }
+
+    //fillData con todos los medicamentos guardados en la DDBB
     private void fillData() {
         Cursor notesCursor = dbAdapter.obtenerTodosLosMedicamentos();
 
@@ -120,11 +144,26 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     }
 
     //Mostraremos el dia seleccionado en la pantalla principal
-    private void showEventDetails(int day, int month, int year) {
+    private void showEventDetail(int day, int month, int year) {
         String[] monthNames = {"enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"};
         String monthName = monthNames[month - 1];
         diaSeleccionado = findViewById(R.id.diaSeleccionado);
-        diaSeleccionado.setText( day + "/" + monthName);
+        diaSeleccionado.setText( day + " de " + monthName);
+    }
+
+    public void showDayDetails(View view) {
+        Calendar calendar = Calendar.getInstance();
+        long currentDate = calendar.getTimeInMillis();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+        String[] monthNames = {"enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"};
+        String monthName = monthNames[month - 1];
+        diaSeleccionado = findViewById(R.id.diaSeleccionado);
+        diaSeleccionado.setText( dayOfMonth + " de " + monthName);
+        diaActual = findViewById(R.id.actualDate);
+        diaActual.setText("" + dayOfMonth);
+        calendarView.setDate(currentDate, true, true);
     }
 
 
@@ -213,7 +252,6 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 Toast.makeText(this, "Scanning cancelled", Toast.LENGTH_LONG).show();
             }
     }
-
 
 
     private class APIFromCIMATask extends AsyncTask<String, String, String> {

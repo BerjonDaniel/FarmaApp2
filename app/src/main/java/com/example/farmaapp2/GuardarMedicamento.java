@@ -16,6 +16,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -210,6 +211,7 @@ public class GuardarMedicamento extends AppCompatActivity {
 
         JSONObject obj = null;
         String jsonString = data;
+        String idMed = null;
         String nombreMedicamento = null;
         String pActivo = null;
         String cPresc = null;
@@ -224,12 +226,14 @@ public class GuardarMedicamento extends AppCompatActivity {
 
         try {
             obj = new JSONObject(jsonString);
+            idMed = obj.getString("_id");
             nombreMedicamento = obj.getString("nombre");
             pActivo = obj.getString("descripcion");
             cPresc = obj.getString("prescripcion");
             //JSONArray documentosArray = obj.getJSONArray("docs");
             viasAdministracion = obj.getString("via_administracion");
             urlProspecto = obj.getString("url_prospecto");
+
 /*
             //Loop para buscar PROSPECTO
             for (int i = 0; i < documentosArray.length(); i++)
@@ -259,6 +263,7 @@ public class GuardarMedicamento extends AppCompatActivity {
         c_presc.setText(cPresc);
         via_admin.setText(viasAdministracion);
         url_prospecto = urlProspecto;
+        mRowId = Long.parseLong(idMed);
         //Loop para escribir lista de VIAS DE ADMINISTRACION
         /*for(int i = 0;i < viasAdministracion.size(); i++){
             vias_administracion = viasAdministracion.get(i);
@@ -382,6 +387,26 @@ public class GuardarMedicamento extends AppCompatActivity {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    public void borrarMedicamento(MenuItem item){
+
+        boolean eliminado = medicamentoAdapter.eliminarMedicamento(mRowId);
+
+        // Verificar si el medicamento fue eliminado correctamente
+        if (eliminado) {
+            // El medicamento se eliminó exitosamente
+            // Mostramos un mensaje al usuario
+            Toast.makeText(GuardarMedicamento.this, "Medicamento eliminado correctamente", Toast.LENGTH_SHORT).show();
+
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        } else {
+            // No se pudo eliminar el medicamento
+            // Realiza cualquier acción adicional que desees
+        }
+
     }
 
 
@@ -605,6 +630,5 @@ public class GuardarMedicamento extends AppCompatActivity {
             mySnackbar.show();
         }
     }
-
 }
 

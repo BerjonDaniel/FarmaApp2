@@ -9,7 +9,8 @@
         android:id="@+id/action_delete"
         android:orderInCategory="1"
         android:title="@string/menu_delete"
-        app:showAsAction="never" />
+        app:showAsAction="never"
+        android:onClick="borrarMedicamento"/>
     <!--
     android:onClick="sendName"
     -->

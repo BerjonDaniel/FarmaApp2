@@ -28,7 +28,6 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(context, "com.example.pharminder_2_0.notify");
         //pendingIntent para abrir la actividad cuando se pulse la notificación
-        //pendingIntent para abrir la actividad cuando se pulse la notificación
         Intent ii = new Intent(context, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, m, ii, PendingIntent.FLAG_IMMUTABLE);
         mBuilder.setContentIntent(pendingIntent);
@@ -49,7 +48,6 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
         }
 
         notificationManager.notify(m, mBuilder.build());
-
 
     }
 }
