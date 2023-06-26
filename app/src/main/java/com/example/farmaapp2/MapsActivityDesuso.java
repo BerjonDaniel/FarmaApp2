@@ -34,12 +34,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
-class GooglePlace {
+class GooglePlace2 {
     private String name;
     private String latitude;
     private String longitude;
 
-    public GooglePlace() {
+    public GooglePlace2() {
         this.name = "";
         this.latitude = "";
         this.longitude = "";
@@ -72,7 +72,7 @@ class GooglePlace {
 
 }
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapsActivityDesuso extends FragmentActivity implements OnMapReadyCallback {
 
     // Nuestro mapa
     GoogleMap mMap;

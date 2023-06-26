@@ -373,22 +373,30 @@ public class GuardarMedicamento extends AppCompatActivity {
         }
         // Creamos un objeto Medicamento con los datos del medicamento
         // Insertamos el medicamento en la base de datos
-        long id = medicamentoAdapter.insertarMedicamento(nombre, descripcion, cPresc, viaAdmin, urlProspecto);
-        if (id != -1) {
-            Toast.makeText(this, "Medicamento guardado correctamente", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(this, "Error al guardar el medicamento", Toast.LENGTH_SHORT).show();
+        if (mRowId == null) {
+            long id = medicamentoAdapter.insertarMedicamento(nombre, descripcion, cPresc, viaAdmin, urlProspecto);
+            if (id!= -1) {
+                Toast.makeText(this, "Medicamento guardado correctamente", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Error al guardar el medicamento", Toast.LENGTH_SHORT).show();
+            }
+        }else{
+            boolean id = medicamentoAdapter.actualizarMedicamento(mRowId, nombre, descripcion, cPresc, viaAdmin, urlProspecto);
+            if (id) {
+                Toast.makeText(this, "Medicamento actualizado correctamente", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Error al actualizar el medicamento", Toast.LENGTH_SHORT).show();
+            }
         }
-        // ------ Hasta aquí el código de las alarmas ------
 
-        // Mostramos un mensaje al usuario
-        Toast.makeText(GuardarMedicamento.this, "Medicamento guardado correctamente", Toast.LENGTH_SHORT).show();
+        // ------ Hasta aquí el código de las alarmas ------
 
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         finish();
     }
 
+    //---------- Para borrar el medicamento de la base de datos ----------
     public void borrarMedicamento(MenuItem item){
 
         boolean eliminado = medicamentoAdapter.eliminarMedicamento(mRowId);
@@ -404,7 +412,29 @@ public class GuardarMedicamento extends AppCompatActivity {
             finish();
         } else {
             // No se pudo eliminar el medicamento
-            // Realiza cualquier acción adicional que desees
+            Toast.makeText(GuardarMedicamento.this, "Error al eliminar el medicamento", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    //---------- Para desactivar las alarmas de este medicamento, pero sin borrarlo ----------
+    public void desactivarAlarmas(MenuItem item){
+
+        MyBroadcastReceiver receiver = new MyBroadcastReceiver();
+        int cancelado = receiver.cancelNotifications(getApplicationContext());
+
+        // Verificar si el medicamento fue eliminado correctamente
+        if (cancelado == -1) {
+            // Las Alarmas se desactivaron exitosamente
+            // Mostramos un mensaje al usuario
+            Toast.makeText(GuardarMedicamento.this, "Las Alarmas del Medicamento se han desactivado", Toast.LENGTH_SHORT).show();
+
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        } else {
+            // No se pudo eliminar el medicamento
+            Toast.makeText(GuardarMedicamento.this, "Error al desactivar las alarmas", Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -542,93 +572,6 @@ public class GuardarMedicamento extends AppCompatActivity {
 
     //Para poder poner Alarmas
 
-    public void setAlarm (){
 
-        // ------ Aqui empezará el codigo de las alarmas ------
-        double diferenciadias1 = (year - cyear) * 365 + (month - cmonth) * 12 + (day - cday);
-        double diferenciadias2 = (year1 - year) * 365 + (month1 - month) * 12 + (day1 - day);
-        double diferenciadias3 = (year1 - cyear) * 365 + (month1 - cmonth) * 12 + (day1 - cday);
-
-        int mHour = c.get(Calendar.HOUR_OF_DAY);
-        int mMinute = c.get(Calendar.MINUTE);
-        Context context = getApplicationContext();
-        ArrayList<PendingIntent> intentArray = new ArrayList<PendingIntent>();
-        AlarmManager alarms =
-                (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        //hago un loop para cada alarma
-        long frecuencia = picker1.getValue() * 3600000;
-        long timeOrLengthofWait = (long) ((((hour - mHour) * 60 + minute - mMinute) * 60000)+ diferenciadias1*86400000);
-        if(timeOrLengthofWait<0){
-            timeOrLengthofWait+=24*3600000;
-        }
-
-        //Creamos notificación
-        NotificationManager notificationManager;
-
-        // crea canal de notificaciones
-        NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(this.getApplicationContext(), "com.uc3m.it.helloallarmappmov.notify_001");
-
-        //pendingIntent para abrir la actividad cuando se pulse la notificación
-        //pendingIntent para abrir la actividad cuando se pulse la notificación
-        Intent ii = new Intent(this.getApplicationContext(), MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, ii, PendingIntent.FLAG_IMMUTABLE);
-
-        mBuilder.setContentIntent(pendingIntent);
-        mBuilder.setSmallIcon(R.drawable.pharminder_logo_circular);
-        mBuilder.setContentTitle("Alarma activada");
-        if (timeOrLengthofWait <= 0) {
-        } else if (timeOrLengthofWait <= 60000) {
-            mBuilder.setContentText("Alarma activada para dentro de " + timeOrLengthofWait / 1000 + " segundos");
-        } else if (timeOrLengthofWait <= 3600000) {
-            mBuilder.setContentText("Alarma activada para dentro de " + timeOrLengthofWait / 60000 + " minutos");
-        } else if  (timeOrLengthofWait <= 86400000){
-            mBuilder.setContentText("Alarma activada para dentro de " + timeOrLengthofWait / 3600000 + " horas");
-        }else{
-            mBuilder.setContentText("Alarma activada para dentro de " + timeOrLengthofWait / (3600000*24) + " dias");
-        }
-        notificationManager =
-                (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            String channelId = "YOUR_CHANNEL_ID";
-            NotificationChannel channel = new NotificationChannel(channelId,
-                    "Canal de HelloAlarmAppMov",
-                    NotificationManager.IMPORTANCE_DEFAULT);
-            notificationManager.createNotificationChannel(channel);
-            mBuilder.setChannelId(channelId);
-        }
-
-        notificationManager.notify(1, mBuilder.build());
-
-        // Programamos la alarma
-        Random random = new Random();
-
-        int m = random.nextInt(9999 - 1000) + 1000;
-
-        int alarmType = AlarmManager.ELAPSED_REALTIME_WAKEUP;
-
-
-        Intent intentToFire = new Intent(this, MyBroadcastReceiver.class);
-        intentToFire.putExtra("NAME", nombre_med.getText().toString());
-        PendingIntent AlarmPendingIntent = PendingIntent.getBroadcast(this, m, intentToFire, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
-        intentArray.add(AlarmPendingIntent);
-        alarms.setRepeating(alarmType, timeOrLengthofWait, frecuencia, AlarmPendingIntent);
-        if (diferenciadias1 < 0) {
-            alarms.cancel(AlarmPendingIntent);
-            Snackbar mySnackbar = Snackbar.make(findViewById(R.id.snack), "Establezca una fecha de inicio posterior a la actual", 5000);
-            mySnackbar.show();
-        }
-        if (diferenciadias2 < 0) {
-            alarms.cancel(AlarmPendingIntent);
-            Snackbar mySnackbar = Snackbar.make(findViewById(R.id.snack), "Establezca una fecha de fin posterior a la de inicio", 5000);
-            mySnackbar.show();
-        }
-        if (diferenciadias3 < 0) {
-            alarms.cancel(AlarmPendingIntent);
-            Snackbar mySnackbar = Snackbar.make(findViewById(R.id.snack), "Establezca una fecha de fin posterior a la actual", 5000);
-            mySnackbar.show();
-        }
-    }
 }
 

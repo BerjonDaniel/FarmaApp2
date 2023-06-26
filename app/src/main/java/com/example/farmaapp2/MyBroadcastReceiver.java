@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 
 import androidx.core.app.NotificationCompat;
@@ -49,5 +50,32 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
 
         notificationManager.notify(m, mBuilder.build());
 
+        // Guardar el identificador único de la notificación en SharedPreferences
+        SharedPreferences sharedPreferences = context.getSharedPreferences("NotificationIDs", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt("notification_id", m);
+        editor.apply();
+
     }
+
+    public int cancelNotifications(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("NotificationIDs", Context.MODE_PRIVATE);
+        int notificationId = sharedPreferences.getInt("notification_id", -1);
+
+        if (notificationId != -1) {
+            NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.cancel(notificationId);
+
+            // Eliminar el identificador almacenado
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.remove("notification_id");
+            editor.apply();
+
+            return -1;
+        }else{
+            return 1;
+        }
+
+    }
+
 }

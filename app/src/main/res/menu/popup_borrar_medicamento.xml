@@ -11,6 +11,12 @@
         android:title="@string/menu_delete"
         app:showAsAction="never"
         android:onClick="borrarMedicamento"/>
+    <item
+        android:id="@+id/action_desactivarAlarma"
+        android:orderInCategory="1"
+        android:title="@string/menu_desactivarAlarma"
+        app:showAsAction="never"
+        android:onClick="desactivarAlarmas"/>
     <!--
     android:onClick="sendName"
     -->
