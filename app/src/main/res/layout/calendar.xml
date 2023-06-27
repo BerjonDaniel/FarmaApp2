@@ -9,17 +9,14 @@
     android:orientation="vertical">
 
     <CalendarView
-        android:id="@+id/calendarView"
+        android:id="@+id/calendarView2"
         android:layout_width="450dp"
         android:layout_height="match_parent"
         android:layout_gravity="center"
         />
 
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/calendarRecycleView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+
 
 
 

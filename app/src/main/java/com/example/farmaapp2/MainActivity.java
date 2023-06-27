@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         dbAdapter.abrir();
 
         //Para mostrar encima del ListView el dia que hemos seleccionado
-        calendarView = findViewById(R.id.calendarView);
+        calendarView = findViewById(R.id.calendarView2);
         calendarView.setOnDateChangeListener((view, year, month, dayOfMonth) -> {
             // Aquí obtengo la fecha seleccionada (year, month, dayOfMonth)
             // y así poder mostrar la información correspondiente en ese día del mes
