@@ -23,6 +23,8 @@ public class ContextTest {
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 100;
     private static final int NOTIFICATION_PERMISSION_REQUEST_CODE = 101;
 
+
+    //Codigo que usaremos para pruebas de contexto en permisos de la aplicacion
     @Before
     public void setup() {
         // Revoca los permisos antes de cada prueba

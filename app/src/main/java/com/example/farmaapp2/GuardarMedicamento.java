@@ -47,6 +47,7 @@ public class GuardarMedicamento extends AppCompatActivity {
     private TextView c_presc;
     private TextView via_admin;
     private String url_prospecto;
+    private TextView codigonacional;
     private Button btnGuardar;
     String error;
 
@@ -76,7 +77,9 @@ public class GuardarMedicamento extends AppCompatActivity {
             Bundle bundle = this.getIntent().getExtras();
             if(bundle.getString("Result")!=null){ // ----- Caso 1
                 String respuesta = bundle.getString("Result");
-                SetPrescriptionDataJSON(respuesta);
+                String cn = bundle.getString("CodigoNacional");
+                SetPrescriptionDataJSON(respuesta, cn);
+
             }else if(bundle.getLong("RowId") != 0){// ---- Caso 2
                 Long respuesta = bundle.getLong("RowId");
                 Log.d(TAG, "La respuesta obtenida es: " + respuesta); // Imprimir la cadena en el registro
@@ -132,7 +135,7 @@ public class GuardarMedicamento extends AppCompatActivity {
     }
 
     // ------ Para cuando llegamos a GuardarMedicamento a traves del escaneo ------
-    public void SetPrescriptionDataJSON(String data) {
+    public void SetPrescriptionDataJSON(String data, String Cn) {
 
         nombre_med = (TextView) findViewById(R.id.nombre_medicamento);
         p_activo = (TextView) findViewById(R.id.princ_Activo);
@@ -140,6 +143,7 @@ public class GuardarMedicamento extends AppCompatActivity {
         //ImageView imagen = (ImageView) findViewById(R.id.imagen_medicamento) ;
         //url_prospecto = (TextView) findViewById(R.id.button2);
         via_admin = (TextView) findViewById(R.id.vias_administracion);
+        codigonacional = (TextView) findViewById(R.id.resultado222);
 
 
         JSONObject obj = null;
@@ -189,6 +193,7 @@ public class GuardarMedicamento extends AppCompatActivity {
         c_presc.setText(cPresc);
         via_admin.setText(viasAdministracion);
         url_prospecto = urlProspecto;
+        codigonacional.setText(Cn);
         //Loop para escribir lista de VIAS DE ADMINISTRACION
         /*for(int i = 0;i < viasAdministracion.size(); i++){
             vias_administracion = viasAdministracion.get(i);

@@ -75,6 +75,20 @@
             </AndroidTestResultsTableState>
           </value>
         </entry>
+        <entry key="-193358401">
+          <value>
+            <AndroidTestResultsTableState>
+              <option name="preferredColumnWidths">
+                <map>
+                  <entry key="Duration" value="90" />
+                  <entry key="R5CRC08BSDP" value="120" />
+                  <entry key="Tests" value="360" />
+                  <entry key="samsung&#10; SM-G991B" value="120" />
+                </map>
+              </option>
+            </AndroidTestResultsTableState>
+          </value>
+        </entry>
         <entry key="43694609">
           <value>
             <AndroidTestResultsTableState>
@@ -82,7 +96,23 @@
                 <map>
                   <entry key="Duration" value="90" />
                   <entry key="Pixel_4_API_30" value="120" />
+                  <entry key="R5CRC08BSDP" value="120" />
                   <entry key="Tests" value="360" />
+                  <entry key="samsung&#10; SM-G991B" value="120" />
+                </map>
+              </option>
+            </AndroidTestResultsTableState>
+          </value>
+        </entry>
+        <entry key="528116687">
+          <value>
+            <AndroidTestResultsTableState>
+              <option name="preferredColumnWidths">
+                <map>
+                  <entry key="Duration" value="90" />
+                  <entry key="R5CRC08BSDP" value="120" />
+                  <entry key="Tests" value="360" />
+                  <entry key="samsung&#10; SM-G991B" value="120" />
                 </map>
               </option>
             </AndroidTestResultsTableState>
@@ -96,6 +126,21 @@
                   <entry key="Duration" value="90" />
                   <entry key="Pixel_4_API_30" value="120" />
                   <entry key="Tests" value="360" />
+                </map>
+              </option>
+            </AndroidTestResultsTableState>
+          </value>
+        </entry>
+        <entry key="979643085">
+          <value>
+            <AndroidTestResultsTableState>
+              <option name="preferredColumnWidths">
+                <map>
+                  <entry key="Duration" value="90" />
+                  <entry key="Pixel_4_API_30" value="120" />
+                  <entry key="R5CRC08BSDP" value="120" />
+                  <entry key="Tests" value="360" />
+                  <entry key="samsung&#10; SM-G991B" value="120" />
                 </map>
               </option>
             </AndroidTestResultsTableState>

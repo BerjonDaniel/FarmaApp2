@@ -347,11 +347,11 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         }
 
         protected void onPostExecute(String result){
-            switchMaintoBarCode(response);
+            switchMaintoBarCode(response, cn);
         }
 
     }
-    private void switchMaintoBarCode(String result) {
+    private void switchMaintoBarCode(String result, String codigoNacional) {
 
         if(result!="ERROR"){
             // Creamos el Intent que va a lanzar la activity de editar medicamento (ApiCodeBar)
@@ -363,6 +363,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
             // Asociamos esta informacion al intent
             intent.putExtra("Result", result);
+            intent.putExtra("CodigoNacional", codigoNacional);
             // Iniciamos la nueva actividad
             startActivity(intent);
         }else{
