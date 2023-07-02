@@ -81,13 +81,13 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             @Override
             public void onActivityResult(Map<String, Boolean> result) {
                 if(result.get(Manifest.permission.ACCESS_FINE_LOCATION) != null){
-                    isLocationPermissionGranted = result.get(Manifest.permission.ACCESS_FINE_LOCATION);
+                    isLocationPermissionGranted = Boolean.TRUE.equals(result.get(Manifest.permission.ACCESS_FINE_LOCATION));
                 }
                 if(result.get(Manifest.permission.WRITE_EXTERNAL_STORAGE) != null){
-                    isWritePermissionGranted = result.get(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                    isWritePermissionGranted = Boolean.TRUE.equals(result.get(Manifest.permission.WRITE_EXTERNAL_STORAGE));
                 }
                 if(result.get(Manifest.permission.POST_NOTIFICATIONS) != null){
-                    isNotificationsPermissionGranted = result.get(Manifest.permission.POST_NOTIFICATIONS);
+                    isNotificationsPermissionGranted = Boolean.TRUE.equals(result.get(Manifest.permission.POST_NOTIFICATIONS));
                 }
             }
         });

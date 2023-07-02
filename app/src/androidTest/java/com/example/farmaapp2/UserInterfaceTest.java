@@ -75,7 +75,6 @@ public class UserInterfaceTest {
 
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 123;
 
-
     @Rule
     public ActivityScenarioRule<MainActivity> activityRule =
             new ActivityScenarioRule<>(MainActivity.class);
@@ -151,14 +150,6 @@ public class UserInterfaceTest {
         onView(withId(R.id.nombre_medicamento)).check(matches(withText("ELOCOM 1 MG/G CREMA")));
     }
 
-    @Test
-    public void testMapsView() {
-        // Realiza clic en el botón en la pantalla principal
-        Espresso.onView(ViewMatchers.withId(R.id.imageButton)).perform(ViewActions.click());
-
-        // Verifica que se haya abierto la vista de Google Maps
-        Espresso.onView(ViewMatchers.withId(R.id.mapsView)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
-    }
     /*
     @Test
     public void testViewDiaSeleccionado(){

@@ -27,6 +27,7 @@ import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.Marker;
 
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -128,6 +129,8 @@ public class MapsActivity2 extends AppCompatActivity implements OnMapReadyCallba
     @Override
     public void onMapReady(GoogleMap googleMap) {
 
+        locationTextView = findViewById(R.id.locationTextView);
+
         // Obtenemos el mapa, que nunca será NULL,
         // y ya podemos hacer lo que sea con él
         mMap = googleMap;
@@ -148,25 +151,18 @@ public class MapsActivity2 extends AppCompatActivity implements OnMapReadyCallba
 
         settings.setCompassEnabled(true); // brújula (SOLO se muestra el icono si se rota el mapa con los dedos)
 
+
         // Comprobamos si tenemos permiso para acceder a la localización
         if (checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             mMap.setMyLocationEnabled(true); // botón "My Location"
-
-        } else {
-            // no tiene permiso, solicitarlo
-            requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_PERMISSION_ACCESS_FINE_LOCATION);
-            // cuando se nos conceda el permiso se llamará a onRequestPermissionsResult()
-        }
-
-
-        LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        // Comprobamos si tenemos permiso para acceder a la localización
-        if (checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            // Obtener la ubicación actualizada aquí
+            LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
             @SuppressLint("MissingPermission")
             Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             if (location != null) {
                 double longitude = location.getLongitude();
                 double latitude = location.getLatitude();
+                locationTextView.setText(latitude + "," + longitude);
                 centerMap(latitude, longitude);
 
                 /*
@@ -181,12 +177,12 @@ public class MapsActivity2 extends AppCompatActivity implements OnMapReadyCallba
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
                  */
             }
+
         } else {
             // no tiene permiso, solicitarlo
             requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_PERMISSION_ACCESS_FINE_LOCATION);
             // cuando se nos conceda el permiso se llamará a onRequestPermissionsResult()
         }
-
     }
 
     @RequiresApi(api = Build.VERSION_CODES.R)
@@ -202,7 +198,7 @@ public class MapsActivity2 extends AppCompatActivity implements OnMapReadyCallba
 
         // Alternativamente, se puede hacer lo mismo a la vez que se cambia el nivel de zoom
         // (comentar si se desea evitar el zoom)
-        float zoom = 14;
+        float zoom = 13;
         update = CameraUpdateFactory.newLatLngZoom(position, zoom);
 
         // Más información sobre distintos movimientos de cámara aquí:
@@ -253,11 +249,11 @@ public class MapsActivity2 extends AppCompatActivity implements OnMapReadyCallba
             ArrayList<GooglePlace> temp;
             //print the call in the console
             System.out.println("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="
-                    + latitude + "," + longitude + "&radius=" + radius + "&type=" + type + "&sensor=true&key=" + "AIzaSyAvTmzu2-g3kXius2d1hUNvAXSeayIOolE");
+                    + latitude + "," + longitude + "&radius=" + radius + "&type=" + type + "&sensor=true&key=" + "AIzaSyBLOTxH3QWbX6x34KvAOjkjzS_GodPC0v8");
 
             // make Call to the url
             temp = makeCall("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="
-                    + latitude + "," + longitude + "&radius=" + radius + "&type=" + type + "&sensor=true&key=" + "AIzaSyAvTmzu2-g3kXius2d1hUNvAXSeayIOolE");
+                    + latitude + "," + longitude + "&radius=" + radius + "&type=" + type + "&sensor=true&key=" + "AIzaSyBLOTxH3QWbX6x34KvAOjkjzS_GodPC0v8");
 
             return temp;
         }
@@ -268,7 +264,7 @@ public class MapsActivity2 extends AppCompatActivity implements OnMapReadyCallba
         protected void onPostExecute(ArrayList<GooglePlace> result) {
 
             // Aquí se actualiza el interfaz de usuario
-            List<String> listTitle = new ArrayList<String>();
+            List<String> listTitle = new ArrayList<>();
 
             for (int i = 0; i < result.size(); i++) {
                 // make a list of the venus that are loaded in the list.
@@ -298,7 +294,7 @@ public class MapsActivity2 extends AppCompatActivity implements OnMapReadyCallba
         URL url = null;
         BufferedInputStream is = null;
         JsonReader jsonReader;
-        ArrayList<GooglePlace> temp = new ArrayList<GooglePlace>();
+        ArrayList<GooglePlace> temp = new ArrayList<>();
 
         try {
             url = new URL(stringURL);
@@ -377,7 +373,7 @@ public class MapsActivity2 extends AppCompatActivity implements OnMapReadyCallba
                 jsonReader.endObject();
             } catch (Exception e) {
                 System.out.println("Exception");
-                return new ArrayList<GooglePlace>();
+                return new ArrayList<>();
             }
         }
 

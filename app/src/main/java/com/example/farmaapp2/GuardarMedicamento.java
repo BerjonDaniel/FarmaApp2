@@ -137,13 +137,13 @@ public class GuardarMedicamento extends AppCompatActivity {
     // ------ Para cuando llegamos a GuardarMedicamento a traves del escaneo ------
     public void SetPrescriptionDataJSON(String data, String Cn) {
 
-        nombre_med = (TextView) findViewById(R.id.nombre_medicamento);
-        p_activo = (TextView) findViewById(R.id.princ_Activo);
-        c_presc = (TextView) findViewById(R.id.presc_med);
+        nombre_med = findViewById(R.id.nombre_medicamento);
+        p_activo = findViewById(R.id.princ_Activo);
+        c_presc = findViewById(R.id.presc_med);
         //ImageView imagen = (ImageView) findViewById(R.id.imagen_medicamento) ;
         //url_prospecto = (TextView) findViewById(R.id.button2);
-        via_admin = (TextView) findViewById(R.id.vias_administracion);
-        codigonacional = (TextView) findViewById(R.id.resultado222);
+        via_admin = findViewById(R.id.vias_administracion);
+        codigonacional = findViewById(R.id.resultado222);
 
 
         JSONObject obj = null;

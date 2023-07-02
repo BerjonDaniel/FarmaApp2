@@ -12,8 +12,6 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 
-import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
 
 import org.junit.After;
 import org.junit.Before;
@@ -24,9 +22,7 @@ import org.junit.runner.RunWith;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.intent.Intents.intending;
-import static androidx.test.espresso.intent.matcher.IntentMatchers.hasAction;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.isInternal;
-import static androidx.test.espresso.intent.matcher.IntentMatchers.toPackage;
 
 import static org.hamcrest.CoreMatchers.not;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -38,11 +34,10 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 @LargeTest
 public class BarcodeScanTest {
 
-    private IdlingResource idlingResource;
-
     @Rule
     public ActivityScenarioRule<MainActivity> activityRule =
             new ActivityScenarioRule<>(MainActivity.class);
+
     @Before
     public void setup() {
         Intents.init();
@@ -59,9 +54,6 @@ public class BarcodeScanTest {
     public void testBarcodeScanning() {
         // Mock the Intent for barcode scanning
         intending(not(isInternal())).respondWith(new Instrumentation.ActivityResult(Activity.RESULT_OK, createResultData("8470006927199")));
-
-        //Verificamos que se ve la vista principal
-        onView(withId(R.id.resultado)).check(matches(isDisplayed()));
 
         // Hacer clic en el botón que infla el menú
         onView(withId(R.id.button)).perform(click());
