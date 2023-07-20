@@ -1,5 +1,6 @@
 package com.example.farmaapp2;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -117,9 +118,13 @@ public class MapsActivity2 extends AppCompatActivity implements OnMapReadyCallba
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mapfragment);
+
+        locationTextView = findViewById(R.id.locationTextView);
+
         // Obtenemos el objeto SupportMapFragment y solicitamos una notificación cuando el mapa esté listo para ser utilizado
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.mapsView);
+        assert mapFragment != null;
         mapFragment.getMapAsync(this);
     }
 
@@ -127,9 +132,7 @@ public class MapsActivity2 extends AppCompatActivity implements OnMapReadyCallba
     // que debemos rellenar para hacer uso del mapa una vez que está listo
     @RequiresApi(api = Build.VERSION_CODES.R)
     @Override
-    public void onMapReady(GoogleMap googleMap) {
-
-        locationTextView = findViewById(R.id.locationTextView);
+    public void onMapReady(@NonNull GoogleMap googleMap) {
 
         // Obtenemos el mapa, que nunca será NULL,
         // y ya podemos hacer lo que sea con él
@@ -176,6 +179,8 @@ public class MapsActivity2 extends AppCompatActivity implements OnMapReadyCallba
                 LatLng sydney = new LatLng(latitude, longitude);
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
                  */
+            }else{
+
             }
 
         } else {
@@ -183,6 +188,37 @@ public class MapsActivity2 extends AppCompatActivity implements OnMapReadyCallba
             requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_PERMISSION_ACCESS_FINE_LOCATION);
             // cuando se nos conceda el permiso se llamará a onRequestPermissionsResult()
         }
+
+        // Configura el Listener para el botón "Mi ubicación"
+        mMap.setOnMyLocationButtonClickListener(() -> {
+            // Aquí puedes realizar las acciones que desees cuando se toca el botón
+            // "Mi ubicación"
+            // Por ejemplo, puedes centrar el mapa en la ubicación actual del usuario
+            // o realizar alguna otra operación relacionada con la ubicación
+            if (checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                // Obtener la ubicación actualizada aquí
+                LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                @SuppressLint("MissingPermission")
+                Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                double longitude = location.getLongitude();
+                double latitude = location.getLatitude();
+                locationTextView.setText(latitude + "," + longitude);
+                new GooglePlaces().execute();
+                centerMap(latitude, longitude);
+            } else {
+            // no tiene permiso, solicitarlo
+            requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_PERMISSION_ACCESS_FINE_LOCATION);
+            // cuando se nos conceda el permiso se llamará a onRequestPermissionsResult()
+            }
+
+
+
+            // Devuelve "true" si quieres que el comportamiento predeterminado también se ejecute
+            // (centrar el mapa en la ubicación del usuario). Si devuelves "false", solo se ejecutará
+            // tu código personalizado.
+            return true;
+        });
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.R)
@@ -194,7 +230,7 @@ public class MapsActivity2 extends AppCompatActivity implements OnMapReadyCallba
 
         // Obtenemos un objeto CameraUpdate que indique el movimiento de cámara que queremos;
         // en este caso, centrar el mapa en unas coordenadas con el método newLatLng()
-        CameraUpdate update = CameraUpdateFactory.newLatLng(position);
+        CameraUpdate update;
 
         // Alternativamente, se puede hacer lo mismo a la vez que se cambia el nivel de zoom
         // (comentar si se desea evitar el zoom)

@@ -3,6 +3,21 @@
   <component name="AndroidTestResultsUserPreferences">
     <option name="androidTestResultsTableState">
       <map>
+        <entry key="-1571451760">
+          <value>
+            <AndroidTestResultsTableState>
+              <option name="preferredColumnWidths">
+                <map>
+                  <entry key="Duration" value="90" />
+                  <entry key="R5CRC08BSDP" value="120" />
+                  <entry key="R5CT10NCAZF" value="120" />
+                  <entry key="Tests" value="360" />
+                  <entry key="samsung&#10; SM-G991B" value="120" />
+                </map>
+              </option>
+            </AndroidTestResultsTableState>
+          </value>
+        </entry>
         <entry key="-1465609222">
           <value>
             <AndroidTestResultsTableState>
@@ -12,6 +27,20 @@
                   <entry key="R5CRC08BSDP" value="120" />
                   <entry key="Tests" value="360" />
                   <entry key="pixel4" value="120" />
+                  <entry key="samsung&#10; SM-G991B" value="120" />
+                </map>
+              </option>
+            </AndroidTestResultsTableState>
+          </value>
+        </entry>
+        <entry key="-1334327763">
+          <value>
+            <AndroidTestResultsTableState>
+              <option name="preferredColumnWidths">
+                <map>
+                  <entry key="Duration" value="90" />
+                  <entry key="R5CRC08BSDP" value="120" />
+                  <entry key="Tests" value="360" />
                   <entry key="samsung&#10; SM-G991B" value="120" />
                 </map>
               </option>
@@ -57,6 +86,18 @@
             </AndroidTestResultsTableState>
           </value>
         </entry>
+        <entry key="-843796534">
+          <value>
+            <AndroidTestResultsTableState>
+              <option name="preferredColumnWidths">
+                <map>
+                  <entry key="Duration" value="90" />
+                  <entry key="Tests" value="360" />
+                </map>
+              </option>
+            </AndroidTestResultsTableState>
+          </value>
+        </entry>
         <entry key="-680255905">
           <value>
             <AndroidTestResultsTableState>
@@ -66,9 +107,25 @@
                   <entry key="Duration" value="90" />
                   <entry key="Pixel_4_API_30" value="120" />
                   <entry key="R5CRC08BSDP" value="120" />
+                  <entry key="R5CT10NCAZF" value="120" />
                   <entry key="Tests" value="360" />
                   <entry key="Xiaomi&#10; M2101K6G" value="120" />
                   <entry key="pixel4" value="120" />
+                  <entry key="samsung&#10; SM-G991B" value="120" />
+                </map>
+              </option>
+            </AndroidTestResultsTableState>
+          </value>
+        </entry>
+        <entry key="-282652430">
+          <value>
+            <AndroidTestResultsTableState>
+              <option name="preferredColumnWidths">
+                <map>
+                  <entry key="Duration" value="90" />
+                  <entry key="R5CRC08BSDP" value="120" />
+                  <entry key="R5CT10NCAZF" value="120" />
+                  <entry key="Tests" value="360" />
                   <entry key="samsung&#10; SM-G991B" value="120" />
                 </map>
               </option>
@@ -83,6 +140,7 @@
                   <entry key="Duration" value="90" />
                   <entry key="Pixel_4_API_30" value="120" />
                   <entry key="R5CRC08BSDP" value="120" />
+                  <entry key="R5CT10NCAZF" value="120" />
                   <entry key="Tests" value="360" />
                   <entry key="samsung&#10; SM-G991B" value="120" />
                 </map>
@@ -91,6 +149,20 @@
           </value>
         </entry>
         <entry key="-193358401">
+          <value>
+            <AndroidTestResultsTableState>
+              <option name="preferredColumnWidths">
+                <map>
+                  <entry key="Duration" value="90" />
+                  <entry key="R5CRC08BSDP" value="120" />
+                  <entry key="Tests" value="360" />
+                  <entry key="samsung&#10; SM-G991B" value="120" />
+                </map>
+              </option>
+            </AndroidTestResultsTableState>
+          </value>
+        </entry>
+        <entry key="10065904">
           <value>
             <AndroidTestResultsTableState>
               <option name="preferredColumnWidths">
@@ -119,6 +191,18 @@
             </AndroidTestResultsTableState>
           </value>
         </entry>
+        <entry key="309416111">
+          <value>
+            <AndroidTestResultsTableState>
+              <option name="preferredColumnWidths">
+                <map>
+                  <entry key="Duration" value="90" />
+                  <entry key="Tests" value="360" />
+                </map>
+              </option>
+            </AndroidTestResultsTableState>
+          </value>
+        </entry>
         <entry key="528116687">
           <value>
             <AndroidTestResultsTableState>
@@ -126,6 +210,7 @@
                 <map>
                   <entry key="Duration" value="90" />
                   <entry key="R5CRC08BSDP" value="120" />
+                  <entry key="R5CT10NCAZF" value="120" />
                   <entry key="Tests" value="360" />
                   <entry key="samsung&#10; SM-G991B" value="120" />
                 </map>
@@ -154,6 +239,7 @@
                   <entry key="Duration" value="90" />
                   <entry key="Pixel_4_API_30" value="120" />
                   <entry key="R5CRC08BSDP" value="120" />
+                  <entry key="R5CT10NCAZF" value="120" />
                   <entry key="Tests" value="360" />
                   <entry key="samsung&#10; SM-G991B" value="120" />
                 </map>
@@ -180,8 +266,10 @@
               <option name="preferredColumnWidths">
                 <map>
                   <entry key="Duration" value="90" />
+                  <entry key="Pixel_2_API_30" value="120" />
                   <entry key="Pixel_4_API_30" value="120" />
                   <entry key="R5CRC08BSDP" value="120" />
+                  <entry key="R5CT10NCAZF" value="120" />
                   <entry key="Tests" value="360" />
                   <entry key="pixel4" value="120" />
                   <entry key="samsung&#10; SM-G991B" value="120" />

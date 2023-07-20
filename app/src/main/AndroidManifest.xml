@@ -68,6 +68,7 @@
             android:name=".MapsActivity2"
             android:exported="false"
             android:label="@string/title_activity_maps2" />
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_map_key"

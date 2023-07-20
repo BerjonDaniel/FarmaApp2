@@ -1,8 +1,6 @@
 package com.example.farmaapp2;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -19,13 +17,9 @@ import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
@@ -39,19 +33,11 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
-import java.util.Map;
 
 
 public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
 
     private static final String API_URL  = "https://cima.aemps.es/cima/rest/medicamento";
-
-    ActivityResultLauncher<String[]> mPermissionResultLauncher;
-    private boolean isLocationPermissionGranted = false;
-    private boolean isWritePermissionGranted = false;
-    private boolean isNotificationsPermissionGranted = false;
-
 
     private TextView tvBarCode;
     private ArrayList<String> resultado = new ArrayList<String>();
@@ -76,22 +62,6 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
         //inflamos el layout
         setContentView(R.layout.activity_notepad);
-
-        mPermissionResultLauncher = registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), new ActivityResultCallback<Map<String, Boolean>>() {
-            @Override
-            public void onActivityResult(Map<String, Boolean> result) {
-                if(result.get(Manifest.permission.ACCESS_FINE_LOCATION) != null){
-                    isLocationPermissionGranted = Boolean.TRUE.equals(result.get(Manifest.permission.ACCESS_FINE_LOCATION));
-                }
-                if(result.get(Manifest.permission.WRITE_EXTERNAL_STORAGE) != null){
-                    isWritePermissionGranted = Boolean.TRUE.equals(result.get(Manifest.permission.WRITE_EXTERNAL_STORAGE));
-                }
-                if(result.get(Manifest.permission.POST_NOTIFICATIONS) != null){
-                    isNotificationsPermissionGranted = Boolean.TRUE.equals(result.get(Manifest.permission.POST_NOTIFICATIONS));
-                }
-            }
-        });
-        requestPermission();
 
         //creamos el adaptador de la BD y la abrimos
         dbAdapter = new MedicamentoAdapter(this);
@@ -138,31 +108,6 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
         // rellenamos el listview con los títulos de todas las notas en la BD
         fillData();
-
-    }
-
-    private void requestPermission(){
-
-        isLocationPermissionGranted = ContextCompat.checkSelfPermission(
-                this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
-        isWritePermissionGranted = ContextCompat.checkSelfPermission(
-                this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
-        isNotificationsPermissionGranted = ContextCompat.checkSelfPermission(
-                this, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED;
-
-        List<String> permissionRequest = new ArrayList<String>();
-        if(!isLocationPermissionGranted){
-            permissionRequest.add(Manifest.permission.ACCESS_FINE_LOCATION);
-        }
-        if(!isWritePermissionGranted){
-            permissionRequest.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        }
-        if(!isNotificationsPermissionGranted){
-            permissionRequest.add(Manifest.permission.POST_NOTIFICATIONS);
-        }
-        if(!permissionRequest.isEmpty()){
-            mPermissionResultLauncher.launch(permissionRequest.toArray(new String[0]));
-        }
 
     }
 
@@ -251,7 +196,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         switch (item.getItemId()) {
             case R.id.item1:
                 Toast.makeText(this, "Codigo de barras", Toast.LENGTH_SHORT);
-               escanear();
+                escanear();
                 return true;
 
             case R.id.item2:
@@ -314,7 +259,6 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         String cn;
         String response;
 
-        @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
         protected String doInBackground(String... urls) {
             // We make the connection
             try {
@@ -351,7 +295,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         }
 
     }
-    private void switchMaintoBarCode(String result, String codigoNacional) {
+    private void switchMaintoBarCode(String result, String cn) {
 
         if(result!="ERROR"){
             // Creamos el Intent que va a lanzar la activity de editar medicamento (ApiCodeBar)
@@ -363,7 +307,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
             // Asociamos esta informacion al intent
             intent.putExtra("Result", result);
-            intent.putExtra("CodigoNacional", codigoNacional);
+            intent.putExtra("CodigoNacional", cn);
             // Iniciamos la nueva actividad
             startActivity(intent);
         }else{
@@ -385,7 +329,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         setContentView(R.layout.busqueda_cn);
     }
     public void createNoteFromCN(View view){
-        codigo_nacional = (EditText) findViewById(R.id.title_cn);
+        codigo_nacional = findViewById(R.id.title_cn);
         String codigonacional = codigo_nacional.getText().toString();
 
         if(codigonacional != null){
@@ -395,9 +339,11 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 api.execute();
             }else{
                 Toast.makeText(this, "Introduzca un código válido", Toast.LENGTH_LONG).show();
+                setContentView(R.layout.activity_notepad);
             }
         }else{
             Toast.makeText(this, "Introduzca un código válido", Toast.LENGTH_LONG).show();
+            setContentView(R.layout.activity_notepad);
         }
     }
 
@@ -416,4 +362,3 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
     }
 }
-
