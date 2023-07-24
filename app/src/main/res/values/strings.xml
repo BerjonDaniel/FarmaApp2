@@ -57,4 +57,5 @@
     <string name="channel_description">AppMov notification channel</string>
     <string name="alarm">com.uc3m.it.helloalarmappmov.ALARM</string>
     <string name="via_administracion"></string>
+    <string name="actual_position">Actual Position</string>
 </resources>

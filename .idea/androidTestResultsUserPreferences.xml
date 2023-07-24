@@ -169,7 +169,9 @@
                 <map>
                   <entry key="Duration" value="90" />
                   <entry key="R5CRC08BSDP" value="120" />
+                  <entry key="R5CT10NCAZF" value="120" />
                   <entry key="Tests" value="360" />
+                  <entry key="samsung" value="120" />
                   <entry key="samsung&#10; SM-G991B" value="120" />
                 </map>
               </option>
@@ -197,7 +199,9 @@
               <option name="preferredColumnWidths">
                 <map>
                   <entry key="Duration" value="90" />
+                  <entry key="R5CRC08BSDP" value="120" />
                   <entry key="Tests" value="360" />
+                  <entry key="samsung&#10; SM-G991B" value="120" />
                 </map>
               </option>
             </AndroidTestResultsTableState>

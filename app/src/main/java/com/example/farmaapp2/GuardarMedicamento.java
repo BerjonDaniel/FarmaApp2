@@ -51,6 +51,10 @@ public class GuardarMedicamento extends AppCompatActivity {
     private Button btnGuardar;
     String error;
 
+    public GuardarMedicamento(Context context) {
+        medicamentoAdapter = new MedicamentoAdapter(context);
+    }
+
     private MedicamentoAdapter medicamentoAdapter;
     //FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -206,12 +210,12 @@ public class GuardarMedicamento extends AppCompatActivity {
     // ------ Para caundo llegamos a GuardarMedicamento a traves de la lista del menú principal ------
     public void SetPrescriptionData(String data) {
         //  Queremos este tipo de cadena: {"nregistro":"37453","nombre":"ANGINOVAG SOLUCION PARA PULVERIZACION BUCAL","pactivos":"DECUALINIO CLORURO, ENOXOLONA, HIDROCORTISONA ACETATO, TIROTRICINA, LIDOCAINA HIDROCLORURO","labtitular":"Ferrer Internacional, S.A.","cpresc":"Medicamento Sujeto A Prescripci\u00F3n M\u00E9dica","estado":{"aut":-249786000000},"comerc":true,"receta":true,"generico":false,"conduc":false,"triangulo":false,"huerfano":false,"biosimilar":false,"nosustituible":{"id":0,"nombre":"N/A"},"psum":false,"notas":false,"materialesInf":false,"ema":false,"docs":[{"tipo":1,"url":"https://cima.aemps.es/cima/pdfs/ft/37453/FT_37453.pdf","urlHtml":"https://cima.aemps.es/cima/dochtml/ft/37453/FT_37453.html","secc":true,"fecha":1617022513000},{"tipo":2,"url":"https://cima.aemps.es/cima/pdfs/p/37453/P_37453.pdf","urlHtml":"https://cima.aemps.es/cima/dochtml/p/37453/P_37453.html","secc":true,"fecha":1617022961000}],"atcs":[{"codigo":"R02A","nombre":"PREPARADOS PARA LA GARGANTA","nivel":3},{"codigo":"R02AA","nombre":"Antis\u00E9pticos","nivel":4},{"codigo":"R02AA52","nombre":"Decualinio, combinaciones con","nivel":5}],"principiosActivos":[{"id":709,"codigo":"709CL","nombre":"DECUALINIO CLORURO","cantidad":"1.0","unidad":"mg","orden":1},{"id":1410,"codigo":"1410A","nombre":"ENOXOLONA","cantidad":"0.6","unidad":"mg","orden":2},{"id":54,"codigo":"54AC","nombre":"HIDROCORTISONA ACETATO","cantidad":"0.6","unidad":"mg","orden":3},{"id":3287,"codigo":"3287A","nombre":"TIROTRICINA","cantidad":"4","unidad":"mg","orden":4},{"id":48,"codigo":"48CH","nombre":"LIDOCAINA HIDROCLORURO","cantidad":"1","unidad":"mg","orden":5}],"excipientes":[{"id":7316,"nombre":"SACARINA SODICA","cantidad":"3.2","unidad":"mg","orden":1},{"id":6996,"nombre":"PROPILENGLICOL","cantidad":"93.33","unidad":"mg","orden":2},{"id":873,"nombre":"ALCOHOL ETILICO (ETANOL)","cantidad":"1 ml","unidad":"Cantidad suficiente","orden":4}],"viasAdministracion":[{"id":49,"nombre":"USO BUCOFAR\u00CDNGEO"}],"presentaciones":[{"cn":"917914","nombre":"ANGINOVAG SOLUCION PARA PULVERIZACION BUCAL , 1 frasco de 20 ml","estado":{"aut":-249786000000},"comerc":true,"psum":false}],"formaFarmaceutica":{"id":50,"nombre":"SOLUCIÓN PARA PULVERIZACIÓN BUCAL"},"formaFarmaceuticaSimplificada":{"id":54,"nombre":"PULVERIZACION BUCAL"},"vtm":{"id":145371000140105,"nombre":"multicomponente"},"dosis":"1.0 mg / 0.6 mg / 0.6 mg / 4 mg / 1 mg"}
-        nombre_med = (TextView) findViewById(R.id.nombre_medicamento);
-        p_activo = (TextView) findViewById(R.id.princ_Activo);
-        c_presc = (TextView) findViewById(R.id.presc_med);
+        nombre_med = findViewById(R.id.nombre_medicamento);
+        p_activo = findViewById(R.id.princ_Activo);
+        c_presc = findViewById(R.id.presc_med);
         //ImageView imagen = (ImageView) findViewById(R.id.imagen_medicamento) ;
         //url_prospecto = (TextView) findViewById(R.id.button2);
-        via_admin = (TextView) findViewById(R.id.vias_administracion);
+        via_admin = findViewById(R.id.vias_administracion);
 
 
         JSONObject obj = null;

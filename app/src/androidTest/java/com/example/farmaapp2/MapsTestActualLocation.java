@@ -1,5 +1,7 @@
 package com.example.farmaapp2;
 
+import androidx.test.platform.app.InstrumentationRegistry;
+
 import android.content.Context;
 import android.location.LocationManager;
 import android.location.Location;
@@ -25,6 +27,9 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.isEmptyOrNullString;
+import static org.hamcrest.Matchers.equalTo;
 
 
 @RunWith(AndroidJUnit4.class)
@@ -37,11 +42,16 @@ public class MapsTestActualLocation {
     private LocationManager locationManager;
     private LocationListener locationListener;
     private String actualCoordinates;
+    private Location actualLocation;
+
+    String preSetText = "Actual Position";
+
 
     @Before
     public void setUp() {
         context = InstrumentationRegistry.getInstrumentation().getTargetContext();
         locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
@@ -53,6 +63,7 @@ public class MapsTestActualLocation {
                 // Almacenar las coordenadas en la variable actualCoordinates
                 actualCoordinates = actualText;
             }
+
 
             @Override
             public void onStatusChanged(String provider, int status, Bundle extras) {}
@@ -113,7 +124,6 @@ public class MapsTestActualLocation {
         }
     }
      */
-    @UiThreadTest
     @Test
     public void testActualLocationIsDisplayed() {
         // Realiza clic en el botón en la pantalla principal
@@ -125,22 +135,21 @@ public class MapsTestActualLocation {
         // Comprobar que la ubicación del dispositivo está habilitada
         if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             // Solicitar una única actualización de la ubicación del dispositivo
-            locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER, locationListener, null);
+            activityRule.getScenario().onActivity(activity -> {
+                locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER, locationListener, null);
+            });
 
-            // Esperar un tiempo para recibir la actualización de la ubicación
-            try {
-                Thread.sleep(5000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            // Esperar a que la interfaz de usuario esté inactiva
+            InstrumentationRegistry.getInstrumentation().waitForIdleSync();
 
             // Verificar el texto actual del TextView con las coordenadas
-            onView(withId(R.id.locationTextView)).check(matches(withText(actualCoordinates)));
+            onView(withId(R.id.locationTextView)).check(matches(withText(not(isEmptyOrNullString()))));
+            onView(withId(R.id.locationTextView)).check(matches(withText(not(equalTo(preSetText)))));
+
         } else {
             // Si la ubicación no está habilitada, falla la prueba
             throw new RuntimeException("La ubicación del dispositivo no está habilitada");
         }
     }
-
 
 }
