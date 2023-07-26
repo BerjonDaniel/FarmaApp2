@@ -51,6 +51,10 @@ public class GuardarMedicamento extends AppCompatActivity {
     private Button btnGuardar;
     String error;
 
+    public GuardarMedicamento() {
+
+    }
+
     public GuardarMedicamento(Context context) {
         medicamentoAdapter = new MedicamentoAdapter(context);
     }

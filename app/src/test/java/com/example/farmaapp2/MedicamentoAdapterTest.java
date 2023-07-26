@@ -56,9 +56,8 @@ public class MedicamentoAdapterTest {
         String url_prospecto = "https://ejemplo.com/prospecto";
 
         long id = medicamentoAdapter.insertarMedicamento(nombre, descripcion, prescripcion, viaAdmin, url_prospecto);
-        Cursor cursor = medicamentoAdapter.obtenerMedicamento(id);
 
-        try {
+        try (Cursor cursor = medicamentoAdapter.obtenerMedicamento(id)) {
             assertNotNull(cursor);
             assertEquals(1, cursor.getCount());
 
@@ -70,10 +69,6 @@ public class MedicamentoAdapterTest {
                 assertEquals(url_prospecto, cursor.getString(cursor.getColumnIndex(MedicamentoAdapter.KEY_URL_PROSPECTO)));
             } else {
                 fail("Cursor is empty!");
-            }
-        } finally {
-            if (cursor != null) {
-                cursor.close();
             }
         }
     }
