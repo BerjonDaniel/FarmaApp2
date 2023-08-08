@@ -15,6 +15,9 @@ jobs:
           distribution: 'temurin'
           java-version: 11
 
+      - name: Clean up
+        run: git clean -ffdx && git reset --hard
+
       - name: Run unit tests
         run: ./gradlew test
 
