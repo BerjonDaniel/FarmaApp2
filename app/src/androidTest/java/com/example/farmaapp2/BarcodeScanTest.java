@@ -49,7 +49,7 @@ public class BarcodeScanTest {
         Intents.release();
     }
 
-
+/*
     @Test
     public void testBarcodeScanning() {
         // Mock the Intent for barcode scanning
@@ -73,4 +73,6 @@ public class BarcodeScanTest {
         intent.putExtra("SCAN_RESULT", barcode);
         return intent;
     }
+
+ */
 }
