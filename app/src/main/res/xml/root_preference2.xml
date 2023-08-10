@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+<PreferenceScreen
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory
-        android:layout_marginTop="200px"
-        app:title="Información General de la App">
-
-
-        <EditTextPreference
-            app:key="Nombre"
-            app:title="FarmaApp"
-           />
+        app:key="notifications_category"
+        app:title="Notificaciones">
 
         <SwitchPreferenceCompat
             app:key="notifications"
-            app:title="Enable message notifications"/>
+            app:title="Permitir notificaciones"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:key="help_category"
+        app:title="Help">
 
         <Preference
             app:key="feedback"
-            app:title="Send feedback"
-            app:summary="Report technical issues or suggest new features"/>
-    </PreferenceCategory>
+            app:summary="Dejanos saber tu opinión sobre la app"
+            app:title="Danos tu opinión"/>
 
+    </PreferenceCategory>
 
 </PreferenceScreen>

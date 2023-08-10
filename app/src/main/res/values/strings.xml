@@ -47,6 +47,7 @@
     <string name="title">Title</string>
     <string name="body">Body</string>
     <string name="confirm">Confirm</string>
+    <string name="confirmar">Confirmar</string>
     <string name="edit_note">Edit Note</string>
     <string name="button_ok">OK</string>
 
@@ -58,4 +59,14 @@
     <string name="alarm">com.uc3m.it.helloalarmappmov.ALARM</string>
     <string name="via_administracion"></string>
     <string name="actual_position">Actual Position</string>
+    <string name="emailexample_gmail_com">emailexample@gmail.com</string>
+    <string name="contrase_a">contraseña</string>
+    <string name="acceder">Acceder</string>
+    <string name="registrarme">Registrarme</string>
+    <string name="Subtitulo_Log_In">para sincronizar tus medicamentos con el resto de tus dispositivos</string>
+    <string name="inicia_sesion">Inicia Sesion</string>
+    <string name="correo_electronico_del_usuario">Correo electronico del Usuario</string>
+    <string name="button_cerrar_sesion">Pulse aquí para cerrar sesión</string>
+    <string name="cerrar_sesion">Si, cerrar sesión</string>
+    <string name="cancelar">cancelar</string>
 </resources>
