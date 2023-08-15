@@ -41,11 +41,13 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 
 public class SettingsActivity extends AppCompatActivity {
 
-    private EditText email;
+    private TextView email_Usuario;
+    private TextView nombre_Usuario;
     private EditText contraseña;
 
     public static class SettingsFragment extends PreferenceFragmentCompat {
@@ -62,6 +64,7 @@ public class SettingsActivity extends AppCompatActivity {
         if (user != null) {
             // User is signed in
             setContentView(R.layout.settings_with_user_loged);
+            setUserData();
         } else {
             // No user is signed in
             setContentView(R.layout.settings_activity);
@@ -81,6 +84,12 @@ public class SettingsActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
+
+    }
+
+    private void setUserData() {
+        email_Usuario = findViewById(R.id.emailLoged);
+        nombre_Usuario = findViewById(R.id.saludoUsuario);
 
     }
 

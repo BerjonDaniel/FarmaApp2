@@ -1,0 +1,139 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".AuthenticationActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="15dp"
+        >
+
+        <ImageView
+            android:id="@+id/loginImageView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="14dp"
+            app:srcCompat="@drawable/logedin" />
+
+
+        <View
+            android:id="@+id/divider2"
+            android:layout_width="1dp"
+            android:layout_height="30dp"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:background="?android:attr/listDivider" />
+        <LinearLayout
+            android:layout_width="332dp"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/newEmailEditText"
+                android:layout_width="280dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="15dp"
+                android:hint="Correo: ejemplo@gmail.com"
+                />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="334dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginStart="55dp"
+        android:paddingStart="10dp">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <EditText
+                android:id="@+id/newPasswordEditText"
+                android:layout_width="280dp"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="@string/contrase_a"
+                android:inputType="textPassword" />
+            <EditText
+                android:id="@+id/repeatPasswordEditText"
+                android:layout_width="280dp"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="@string/repetir_contrase_a"
+                android:inputType="textPassword" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+
+                />
+            <EditText
+                android:id="@+id/nombre_usuario"
+                android:layout_width="280dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="15dp"
+                android:hint="Nombre"
+                />
+            <EditText
+                android:id="@+id/apellido_usuario"
+                android:layout_width="280dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="15dp"
+                android:hint="Apellido"
+                />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="5dp">
+
+            <Button
+                android:id="@+id/button_registrar_usuario"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_marginEnd="20dp"
+                android:text="Guardar"
+                android:onClick="registrarUsuario"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:gravity="center|start"
+                android:onClick="volverAtras"
+                android:text="@string/button_volver_atras"
+                android:textColor="@color/blackclaro"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+    <View
+        android:id="@+id/divider3"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="5dp"
+        android:background="?android:attr/listDivider" />
+
+
+
+</LinearLayout>

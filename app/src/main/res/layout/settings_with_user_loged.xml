@@ -8,7 +8,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="75dp"
+        android:layout_height="80dp"
         android:orientation="horizontal"
         android:layout_marginRight="15dp"
         android:layout_marginTop="15dp"
@@ -26,34 +26,51 @@
         <View
             android:id="@+id/divider2"
             android:layout_width="5dp"
-            android:layout_height="match_parent"
+            android:layout_height="40dp"
             android:layout_weight="1"
+            android:layout_gravity="center"
             android:background="?android:attr/listDivider" />
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="332dp"
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:paddingLeft="10dp"
             >
             <TextView
+                android:id="@+id/saludoUsuario"
                 android:layout_width="match_parent"
-                android:layout_height="30dp"
+                android:layout_height="25dp"
                 android:layout_marginTop="5dp"
-                android:text="@string/correo_electronico_del_usuario"
+                android:text="@string/mensaje_bienvenida_usuario"
                 android:textSize="20sp"
+                android:gravity="center|start"
+                />
+            <TextView
+                android:id="@+id/emailLoged"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:text="@string/correo_electronico_del_usuario"
+                android:textSize="15sp"
                 android:textColor="@color/teal_200"
                 android:gravity="center|start"
                 />
-
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:textColor="@color/blackclaro"
-                android:textSize="14sp"
-                android:gravity="center|start"
-                android:onClick="cerrarSesion"
-                android:text="@string/button_cerrar_sesion"/>
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:textColor="@color/blackclaro"
+                    android:textSize="12sp"
+                    android:gravity="center|start"
+                    android:onClick="cerrarSesion"
+                    android:text="@string/button_cerrar_sesion"/>
+
+            </LinearLayout>
+
 
 
         </LinearLayout>
