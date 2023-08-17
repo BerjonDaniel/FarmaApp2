@@ -25,10 +25,18 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,7 +44,10 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Random;
 
 public class GuardarMedicamento extends AppCompatActivity {
@@ -60,7 +71,10 @@ public class GuardarMedicamento extends AppCompatActivity {
     }
 
     private MedicamentoAdapter medicamentoAdapter;
-    //FirebaseFirestore db = FirebaseFirestore.getInstance();
+    // Access a Cloud Firestore instance from your Activity
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private FirebaseAuth mAuth;
+    FirebaseUser user;
 
     //variables para las alarmas
     Calendar c = Calendar.getInstance();
@@ -79,6 +93,18 @@ public class GuardarMedicamento extends AppCompatActivity {
         setContentView(R.layout.resumen_medicamento);
 
         medicamentoAdapter = new MedicamentoAdapter(this);
+        // Inicializa FirebaseApp antes de usar Firebase
+        FirebaseApp.initializeApp(this);
+        mAuth = FirebaseAuth.getInstance();
+        user = mAuth.getCurrentUser();
+        if (user != null) {
+            // User is signed in
+            //setContentView(R.layout.settings_with_user_loged);
+            //setUserData(user);
+        } else {
+            // No user is signed in
+            //setContentView(R.layout.settings_activity);
+        }
 
         try { //Accederemos aquí de dos formas: 1. Al escanear un medicamento
               //                                2. Al pulsar un medicamento en la lista
@@ -125,6 +151,7 @@ public class GuardarMedicamento extends AppCompatActivity {
         btnGuardar.setOnClickListener(guardarClickListener);
 
          */
+
 
         //Para las alarmas
         timeButton = findViewById(R.id.timeButton);
@@ -387,9 +414,55 @@ public class GuardarMedicamento extends AppCompatActivity {
         // Creamos un objeto Medicamento con los datos del medicamento
         // Insertamos el medicamento en la base de datos
         if (mRowId == null) {
+            //Base da datos SQLite en el dispositivo del usuario
             long id = medicamentoAdapter.insertarMedicamento(nombre, descripcion, cPresc, viaAdmin, urlProspecto);
             if (id!= -1) {
                 Toast.makeText(this, "Medicamento guardado correctamente", Toast.LENGTH_SHORT).show();
+                if(user!=null){
+                    //Base de datos Cloud Firestore
+                    //Realiza una consulta para buscar medicamentos con el mismo nombre
+                    //Si hay algun medicamento con elmismo nombre, no lo añadirá nuevamente
+                    db.collection("users").document(user.getEmail())
+                            .collection("medicamentos")
+                            .whereEqualTo("nombre", nombre)
+                            .get()
+                            .addOnCompleteListener(task -> {
+                                if (task.isSuccessful()) {
+                                    boolean medicamentoExists = !task.getResult().isEmpty();
+
+                                    if (!medicamentoExists) {
+                                        // El medicamento no existe, puedes agregarlo
+                                        Map<String, Object> nuevoMedicamento = new HashMap<>();
+                                        nuevoMedicamento.put("_id", id);
+                                        nuevoMedicamento.put("nombre", nombre);
+                                        nuevoMedicamento.put("descripcion", descripcion);
+                                        nuevoMedicamento.put("prescripcion", cPresc);
+                                        nuevoMedicamento.put("via_administracion", viaAdmin);
+                                        nuevoMedicamento.put("url_prospecto", urlProspecto);
+                                        // Agrega otros campos si es necesario
+                                        db.collection("users").document(user.getEmail())
+                                                .collection("medicamentos")
+                                                .add(nuevoMedicamento)
+                                                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                                    @Override
+                                                    public void onSuccess(DocumentReference documentReference) {
+                                                        Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
+                                                    }
+                                                })
+                                                .addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        Log.w(TAG, "Error adding document", e);
+                                                    }
+                                                });
+                                    } else {
+                                        // El medicamento ya existe, toma alguna acción
+                                    }
+                                } else {
+                                    // Ocurrió un error al realizar la consulta
+                                }
+                            });
+                }
             } else {
                 Toast.makeText(this, "Error al guardar el medicamento", Toast.LENGTH_SHORT).show();
             }
@@ -397,6 +470,24 @@ public class GuardarMedicamento extends AppCompatActivity {
             boolean id = medicamentoAdapter.actualizarMedicamento(mRowId, nombre, descripcion, cPresc, viaAdmin, urlProspecto);
             if (id) {
                 Toast.makeText(this, "Medicamento actualizado correctamente", Toast.LENGTH_SHORT).show();
+                /*
+                if(user!=null){
+                    db.collection("users").document(user.getEmail()).collection("medicamentos").update()
+                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                @Override
+                                public void onSuccess(DocumentReference documentReference) {
+                                    Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.w(TAG, "Error adding document", e);
+                                }
+                            });
+                }
+                //Para actualizar los medicamentos en la base de datos de Cloud Firestore!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                 */
             } else {
                 Toast.makeText(this, "Error al actualizar el medicamento", Toast.LENGTH_SHORT).show();
             }
@@ -413,6 +504,42 @@ public class GuardarMedicamento extends AppCompatActivity {
     public void borrarMedicamento(MenuItem item){
 
         boolean eliminado = medicamentoAdapter.eliminarMedicamento(mRowId);
+        db.collection("users").document(user.getEmail())
+                .collection("medicamentos").document(mRowId.toString()).delete();
+
+                /*
+                .whereEqualTo("_id", mRowId)
+                .get().addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+
+
+                        if (!medicamentoExists) {
+                            db.collection("users")
+                                    .document(Objects.requireNonNull(user.getEmail()))
+                                    .collection("medicamentos")
+                                    .add(nuevoMedicamento)
+                                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                        @Override
+                                        public void onSuccess(DocumentReference documentReference) {
+                                            Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Log.w(TAG, "Error adding document", e);
+                                        }
+                                    });
+                        } else {
+                            // El medicamento ya existe, toma alguna acción
+                        }
+                    } else {
+                        Log.w(TAG, "---------------Error al hacer la consulta--------------------------------");
+                    }
+                });
+
+                 */
+
 
         // Verificar si el medicamento fue eliminado correctamente
         if (eliminado) {

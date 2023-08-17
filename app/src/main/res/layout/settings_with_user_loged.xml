@@ -42,6 +42,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="25dp"
                 android:layout_marginTop="5dp"
+                android:textAllCaps="true"
                 android:text="@string/mensaje_bienvenida_usuario"
                 android:textSize="20sp"
                 android:gravity="center|start"

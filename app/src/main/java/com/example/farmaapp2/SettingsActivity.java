@@ -42,13 +42,20 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class SettingsActivity extends AppCompatActivity {
 
     private TextView email_Usuario;
     private TextView nombre_Usuario;
-    private EditText contraseña;
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    // Create a new user with a first and last name
+    //Map<String, Object> userAux = new HashMap<>();
 
     public static class SettingsFragment extends PreferenceFragmentCompat {
         @Override
@@ -64,7 +71,7 @@ public class SettingsActivity extends AppCompatActivity {
         if (user != null) {
             // User is signed in
             setContentView(R.layout.settings_with_user_loged);
-            setUserData();
+            setUserData(user);
         } else {
             // No user is signed in
             setContentView(R.layout.settings_activity);
@@ -87,9 +94,39 @@ public class SettingsActivity extends AppCompatActivity {
 
     }
 
-    private void setUserData() {
+    private void setUserData(FirebaseUser user) {
         email_Usuario = findViewById(R.id.emailLoged);
         nombre_Usuario = findViewById(R.id.saludoUsuario);
+
+        String email = user.getEmail();
+
+        db.collection("users")
+                .whereEqualTo("email", email)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()){
+                            Log.d(TAG, "setUserdataWithEmail:success");
+                            for(QueryDocumentSnapshot document : task.getResult()){
+
+                                Log.d(TAG, document.getId() + "-->" + document.getData());
+
+                                String email2 = document.get("email").toString();
+                                String saludo = "¡Hola, " + document.get("nombre").toString() + " " + document.get("apellido").toString() + "!";
+                                //Cambiar esto por el nombre!!!!!!!!!!!!!!!!!!!!!!!!!!
+                                email_Usuario.setText(email2);
+                                nombre_Usuario.setText(saludo);
+
+                            }
+
+                        }else{
+                            Log.w(TAG, "setUserDataWithEmail:failure", task.getException());
+
+                        }
+                    }
+                });
+
 
     }
 

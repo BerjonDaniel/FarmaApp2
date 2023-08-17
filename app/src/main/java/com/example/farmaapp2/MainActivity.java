@@ -34,6 +34,9 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
@@ -65,7 +68,9 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     private int Numero_de_Digitos = 6;
 
     private MedicamentoAdapter dbAdapter;
-    private DateAdapterDesuso dbDateAdapter;
+    //private DateAdapterDesuso dbDateAdapter;
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private FirebaseAuth mAuth;
     private ListView m_listview;
     private CalendarView calendarView;
     private TextView diaSeleccionado;
@@ -84,18 +89,19 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         setContentView(R.layout.activity_notepad);
 
         mPermissionResultLauncher = registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), new ActivityResultCallback<Map<String, Boolean>>() {
+            @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
             @Override
             public void onActivityResult(Map<String, Boolean> result) {
                 if(result.get(Manifest.permission.ACCESS_FINE_LOCATION) != null){
-                    isLocationPermissionGranted = result.get(Manifest.permission.ACCESS_FINE_LOCATION);
+                    isLocationPermissionGranted = Boolean.TRUE.equals(result.get(Manifest.permission.ACCESS_FINE_LOCATION));
                     isLocationPermissionGranted = Boolean.TRUE.equals(result.get(Manifest.permission.ACCESS_FINE_LOCATION));
                 }
                 if(result.get(Manifest.permission.WRITE_EXTERNAL_STORAGE) != null){
-                    isWritePermissionGranted = result.get(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                    isWritePermissionGranted = Boolean.TRUE.equals(result.get(Manifest.permission.WRITE_EXTERNAL_STORAGE));
                     isWritePermissionGranted = Boolean.TRUE.equals(result.get(Manifest.permission.WRITE_EXTERNAL_STORAGE));
                 }
                 if(result.get(Manifest.permission.POST_NOTIFICATIONS) != null){
-                    isNotificationsPermissionGranted = result.get(Manifest.permission.POST_NOTIFICATIONS);
+                    isNotificationsPermissionGranted = Boolean.TRUE.equals(result.get(Manifest.permission.POST_NOTIFICATIONS));
                     isNotificationsPermissionGranted = Boolean.TRUE.equals(result.get(Manifest.permission.POST_NOTIFICATIONS));
                 }
             }
@@ -106,6 +112,10 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         //creamos el adaptador de la BD y la abrimos
         dbAdapter = new MedicamentoAdapter(this);
         dbAdapter.abrir();
+
+        // Inicializa FirebaseApp antes de usar Firebase
+        FirebaseApp.initializeApp(this);
+        mAuth = FirebaseAuth.getInstance();
 
         //Para mostrar encima del ListView el dia que hemos seleccionado
         calendarView = findViewById(R.id.calendarView2);
