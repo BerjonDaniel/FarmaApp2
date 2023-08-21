@@ -37,6 +37,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -503,47 +506,43 @@ public class GuardarMedicamento extends AppCompatActivity {
     //---------- Para borrar el medicamento de la base de datos ----------
     public void borrarMedicamento(MenuItem item){
 
+        nombre_med = findViewById(R.id.nombre_medicamento);
+        String nombreMed = nombre_med.getText().toString();
+
         boolean eliminado = medicamentoAdapter.eliminarMedicamento(mRowId);
-        db.collection("users").document(user.getEmail())
-                .collection("medicamentos").document(mRowId.toString()).delete();
-
-                /*
-                .whereEqualTo("_id", mRowId)
-                .get().addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-
-
-                        if (!medicamentoExists) {
-                            db.collection("users")
-                                    .document(Objects.requireNonNull(user.getEmail()))
-                                    .collection("medicamentos")
-                                    .add(nuevoMedicamento)
-                                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                        @Override
-                                        public void onSuccess(DocumentReference documentReference) {
-                                            Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
-                                        }
-                                    })
-                                    .addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            Log.w(TAG, "Error adding document", e);
-                                        }
-                                    });
-                        } else {
-                            // El medicamento ya existe, toma alguna acción
-                        }
-                    } else {
-                        Log.w(TAG, "---------------Error al hacer la consulta--------------------------------");
-                    }
-                });
-
-                 */
-
 
         // Verificar si el medicamento fue eliminado correctamente
         if (eliminado) {
             // El medicamento se eliminó exitosamente
+            if(mAuth.getCurrentUser()!=null){
+                // Eliminar el medicamento de Cloud Firestore
+                String emailAux = user.getEmail();
+                Log.d(TAG, "DocumentSnapshot added with ID: " + mRowId);
+                eliminarMedicamentosPorNombre(nombreMed, emailAux);
+                //NO FUNCIONA DEL T0D0--------------Revisar---------------------------------------
+                /*
+                db.collection("users")
+                        .document(Objects.requireNonNull(emailAux))
+                        .collection("medicamentos")
+                        .document(nombreMed)
+                        .delete()
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                // El medicamento se eliminó exitosamente de Firestore
+                                Log.d(TAG, "Documento eliminado exitosamente de Firestore.");
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.w(TAG, "Error delating document", e);
+                            }
+                        });
+
+                 */
+            }
+
             // Mostramos un mensaje al usuario
             Toast.makeText(GuardarMedicamento.this, "Medicamento eliminado correctamente", Toast.LENGTH_SHORT).show();
 
@@ -555,6 +554,36 @@ public class GuardarMedicamento extends AppCompatActivity {
             Toast.makeText(GuardarMedicamento.this, "Error al eliminar el medicamento", Toast.LENGTH_SHORT).show();
         }
 
+    }
+
+    public void eliminarMedicamentosPorNombre(String nombreMed, String email) {
+        db.collection("users").document(Objects.requireNonNull(email))
+                .collection("medicamentos")
+                .whereEqualTo("nombre", nombreMed)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            String documentId = document.getId();
+                            eliminarMedicamentoPorId(documentId, email);
+                        }
+                    } else {
+                        Log.w(TAG, "Error al obtener los documentos con el nombre especificado", task.getException());
+                    }
+                });
+    }
+
+    public void eliminarMedicamentoPorId(String documentId, String email) {
+        db.collection("users").document(Objects.requireNonNull(email))
+                .collection("medicamentos")
+                .document(documentId)
+                .delete()
+                .addOnSuccessListener(aVoid -> {
+                    Log.d(TAG, "Documento eliminado exitosamente de Firestore: " + documentId);
+                })
+                .addOnFailureListener(e -> {
+                    Log.w(TAG, "Error al eliminar el documento de Firestore: " + documentId, e);
+                });
     }
 
     //---------- Para desactivar las alarmas de este medicamento, pero sin borrarlo ----------
@@ -638,62 +667,6 @@ public class GuardarMedicamento extends AppCompatActivity {
         DatePickerDialog.setTitle("Select Date");
         DatePickerDialog.show();
     }
-    /*
-    private View.OnClickListener guardarClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            // Obtenemos los datos del medicamento
-            String nombre = nombre_med.getText().toString();
-            Log.i("----------------------RECEIVED", nombre);
-            String descripcion = p_activo.getText().toString();
-            Log.i("----------------------RECEIVED", descripcion);
-            String cPresc = c_presc.getText().toString();
-            Log.i("----------------------RECEIVED", cPresc);
-            String viaAdmin = via_admin.getText().toString();
-            Log.i("----------------------RECEIVED", viaAdmin);
-            String urlProspecto = url_prospecto;
-            Log.i("----------------------RECEIVED", urlProspecto);
-
-            // Establecemos las alarmas
-            setAlarm(v);
-            // Guardamos el medicamento en la base de datos
-            guardarMedicamento(nombre, descripcion, cPresc, viaAdmin, urlProspecto);
-            // Mostramos un mensaje al usuario
-            Toast.makeText(GuardarMedicamento2.this, "Medicamento guardado correctamente", Toast.LENGTH_SHORT).show();
-        }
-
-    };
-
-     */
-    /*
-    private void guardarMedicamento(String nombre, String descripcion, String cPresc, String viaAdmin) {
-        // Creamos un objeto Medicamento con los datos del medicamento
-        MedicamentoAdapterChat medicamento = new MedicamentoAdapterChat(nombre, descripcion, cPresc, viaAdmin);
-
-        // Insertamos el medicamento en la base de datos
-        medicamentoAdapter.insertarMedicamento(medicamento);
-    }
-
-     */
-    /*
-    private void guardarMedicamento(String nombre, String descripcion, String cPresc, String viaAdmin, String urlProspecto) {
-        // Creamos un objeto Medicamento con los datos del medicamento
-
-        // Insertamos el medicamento en la base de datos
-        long id = medicamentoAdapterChat.insertarMedicamento(nombre, descripcion, cPresc, viaAdmin, urlProspecto);
-        if (id != -1) {
-            Toast.makeText(this, "Medicamento guardado correctamente", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(this, "Error al guardar el medicamento", Toast.LENGTH_SHORT).show();
-        }
-
-
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
-        finish();
-    }
-
-     */
 
     //Para poder abrir el prospecto
     public void  abrirurl(View view){

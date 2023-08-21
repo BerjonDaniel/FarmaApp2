@@ -86,12 +86,6 @@ public class SettingsActivity extends AppCompatActivity {
         }
 
 
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
-
-
     }
 
     private void setUserData(FirebaseUser user) {
@@ -114,7 +108,6 @@ public class SettingsActivity extends AppCompatActivity {
 
                                 String email2 = document.get("email").toString();
                                 String saludo = "¡Hola, " + document.get("nombre").toString() + " " + document.get("apellido").toString() + "!";
-                                //Cambiar esto por el nombre!!!!!!!!!!!!!!!!!!!!!!!!!!
                                 email_Usuario.setText(email2);
                                 nombre_Usuario.setText(saludo);
 

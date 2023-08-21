@@ -7,13 +7,10 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.Switch;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -25,6 +22,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
@@ -32,62 +30,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-class Medicamento {
-    private String nombre;
-    private String descripcion;
-    private String prescripcion;
-    private String viaAdmin;
-    private String url_prospecto;
-
-    // Constructors, getters, setters
-
-    public Medicamento() {
-        this.nombre = "";
-        this.descripcion = "";
-        this.prescripcion = "";
-        this.viaAdmin = "";
-        this.url_prospecto = "";
-    }
-
-    public Map<String, Object> toMap() {
-        Map<String, Object> map = new HashMap<>();
-        map.put("nombre", nombre);
-        map.put("descripcion", descripcion);
-        map.put("prescripcion", prescripcion);
-        map.put("viaAdmin", viaAdmin);
-        map.put("url_prospecto", url_prospecto);
-        return map;
-    }
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
-
-    public void setPrescripcion(String prescripcion) {
-        this.prescripcion = prescripcion;
-    }
-    public void setViaAdmin(String viaAdmin) {
-        this.viaAdmin = viaAdmin;
-    }
-    public void setUrlProspecto(String url_prospecto) {
-        this.url_prospecto = url_prospecto;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public String getPrescripcion() {
-        return prescripcion;
-    }
-    public String getViaAdmin(){ return viaAdmin;}
-    public String getUrlProspecto(){ return url_prospecto;}
-}
 public class AuthenticationActivity extends AppCompatActivity {
 
     private EditText email;
@@ -159,7 +101,7 @@ public class AuthenticationActivity extends AppCompatActivity {
                                     updateUI(user);
                                     addUser(user, nombreUsuario, apellidoUsuario);
                                     accederUsuario(email, password);
-                                    volverMain();
+
                                 } else {
                                     // If sign in fails, display a message to the user.
                                     Log.w(TAG, "createUserWithEmail:failure", task.getException());
@@ -176,7 +118,7 @@ public class AuthenticationActivity extends AppCompatActivity {
             Toast.makeText(AuthenticationActivity.this, "Las contraseñas deben coincidir",
                     Toast.LENGTH_SHORT).show();
         }
-
+        volverMain();
     }
 
     public void accederUsuario(View view){
@@ -199,8 +141,9 @@ public class AuthenticationActivity extends AppCompatActivity {
                                 FirebaseUser user = mAuth.getCurrentUser();
                                 Cursor notesCursor = dbAdapter.obtenerTodosLosMedicamentos();
                                 addMedtoUser(user, notesCursor);
+                                cargarMedicamentosDeLaNube(email);
                                 updateUI(user);
-                                volverMain();
+
                             } else {
                                 // If Log in fails, display a message to the user.
                                 Log.w(TAG, "signInWithEmail:failure", task.getException());
@@ -211,6 +154,7 @@ public class AuthenticationActivity extends AppCompatActivity {
                         }
                     });
         }
+        volverMain();
     }
 
     public void accederUsuario(String email, String password){
@@ -283,6 +227,28 @@ public class AuthenticationActivity extends AppCompatActivity {
 
     }
 
+    public void cargarMedicamentosDeLaNube(String userEmail) {
+        db.collection("users")
+                .document(userEmail)
+                .collection("medicamentos")
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        List<DocumentSnapshot> medicamentosSnapshot = task.getResult().getDocuments();
+
+                        List<Map<String, Object>> listaMedicamentos = new ArrayList<>();
+                        for (DocumentSnapshot medicamentoSnapshot : medicamentosSnapshot) {
+                            Map<String, Object> medicamentoData = medicamentoSnapshot.getData();
+                            listaMedicamentos.add(medicamentoData);
+                        }
+                        dbAdapter.insertarListaMedicamentos2(listaMedicamentos);
+                        // Aquí puedes realizar la acción que necesites con la lista de medicamentos cargados
+                        // Por ejemplo, mostrarlos en una lista, actualizar la UI, etc.
+                    } else {
+                        Log.w(TAG, "Error al cargar medicamentos", task.getException());
+                    }
+                });
+    }
     public void volverAtras(View view) {
         setContentView(R.layout.login_activity);
     }
@@ -297,6 +263,7 @@ public class AuthenticationActivity extends AppCompatActivity {
 
             if (medicamentos != null && medicamentos.moveToFirst()) {
                 int columnCount = medicamentos.getColumnCount();
+                int columnCountAux = medicamentos.getColumnCount();
                 do {
                     Map<String, Object> nuevoMedicamento = new HashMap<>();
                     for (int i = 0; i < columnCount; i++) {
@@ -305,7 +272,10 @@ public class AuthenticationActivity extends AppCompatActivity {
                         nuevoMedicamento.put(columnName, columnValue);
                         if(Objects.equals(columnName, "nombre")){
                             nombreAux = columnValue.toString();
+                        }else{
+                            //No lo añade
                         }
+
                     }
                     //Realiza una consulta para buscar medicamentos con el mismo nombre
                     //Si hay algun medicamento con elmismo nombre, no lo añadirá nuevamente
@@ -316,27 +286,8 @@ public class AuthenticationActivity extends AppCompatActivity {
                             .addOnCompleteListener(task -> {
                                 if (task.isSuccessful()) {
                                     boolean medicamentoExists = !task.getResult().isEmpty();
+                                    añadirMedicamento(medicamentoExists, user, nuevoMedicamento);
 
-                                    if (!medicamentoExists) {
-                                        db.collection("users")
-                                            .document(Objects.requireNonNull(user.getEmail()))
-                                            .collection("medicamentos")
-                                            .add(nuevoMedicamento)
-                                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                                @Override
-                                                public void onSuccess(DocumentReference documentReference) {
-                                                    Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
-                                                }
-                                            })
-                                            .addOnFailureListener(new OnFailureListener() {
-                                                 @Override
-                                                public void onFailure(@NonNull Exception e) {
-                                                    Log.w(TAG, "Error adding document", e);
-                                                }
-                                            });
-                                    } else {
-                                        // El medicamento ya existe, toma alguna acción
-                                    }
                                 } else {
                                     Log.w(TAG, "---------------Error al hacer la consulta--------------------------------");
                                 }
@@ -361,6 +312,31 @@ public class AuthenticationActivity extends AppCompatActivity {
                 return null;
             default:
                 return null;
+        }
+    }
+
+    private void añadirMedicamento (Boolean medicamentoExists, FirebaseUser user, Map<String, Object> nuevoMedicamento){
+
+        if (!medicamentoExists) {
+            db.collection("users")
+                    .document(Objects.requireNonNull(user.getEmail()))
+                    .collection("medicamentos")
+                    .add(nuevoMedicamento)
+                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                        @Override
+                        public void onSuccess(DocumentReference documentReference) {
+                            Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.w(TAG, "Error adding document", e);
+                        }
+                    });
+            updateUI(user);
+        } else {
+            // El medicamento ya existe, NO HACEMOS NADA
         }
     }
 }

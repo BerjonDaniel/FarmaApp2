@@ -2,6 +2,7 @@ package com.example.farmaapp2;
 
 import java.sql.*;
 import java.util.List;
+import java.util.Map;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -200,6 +201,68 @@ public class MedicamentoAdapter {
         }
 
         return insertedRows;
+    }
+
+    // Método para insertar una lista de medicamentos en la base de datos SQLite
+    /*
+    public long insertarListaMedicamentos(List<Map<String, Object>> listaMedicamentos) {
+        long totalInsertedRows = 0;
+
+        for (Map<String, Object> medicamento : listaMedicamentos) {
+            String nombre = medicamento.get(KEY_NOMBRE).toString();
+            String descripcion = medicamento.get(KEY_BODY).toString();
+            String prescripcion = medicamento.get(KEY_PRESCRIPCION).toString();
+            String viaAdmin = medicamento.get(KEY_VIADMIN).toString();
+            String url_prospecto = medicamento.get(KEY_URL_PROSPECTO).toString();
+
+            long insertedRowId = insertarMedicamento(nombre, descripcion, prescripcion, viaAdmin, url_prospecto);
+
+            if (insertedRowId != -1) {
+                totalInsertedRows++;
+            }
+        }
+
+        return totalInsertedRows;
+    }
+
+     */
+    // Método para insertar una lista de medicamentos en la base de datos SQLite
+    public long insertarListaMedicamentos2(List<Map<String, Object>> listaMedicamentos) {
+        long totalInsertedRows = 0;
+
+        for (Map<String, Object> medicamento : listaMedicamentos) {
+            String nombre = medicamento.get("nombre").toString();
+
+            // Verificar si el medicamento con el mismo nombre ya existe en la base de datos
+            if (!existeMedicamento(nombre)) {
+                String descripcion = medicamento.get(KEY_BODY).toString();
+                String prescripcion = medicamento.get(KEY_PRESCRIPCION).toString();
+                String viaAdmin = medicamento.get(KEY_VIADMIN).toString();
+                String url_prospecto = medicamento.get(KEY_URL_PROSPECTO).toString();
+
+                long insertedRowId = insertarMedicamento(nombre, descripcion, prescripcion, viaAdmin, url_prospecto);
+
+                if (insertedRowId != -1) {
+                    totalInsertedRows++;
+                }
+            }
+        }
+
+        return totalInsertedRows;
+    }
+
+    // Método para verificar si un medicamento con el mismo nombre ya existe en la base de datos
+    public boolean existeMedicamento(String nombre) {
+        Cursor cursor = mDb.query(TABLA_MEDICAMENTOS, new String[]{KEY_NOMBRE},
+                KEY_NOMBRE + "=?", new String[]{nombre}, null, null, null);
+
+        boolean existe = cursor != null && cursor.getCount() > 0;
+
+        if (cursor != null) {
+            cursor.close();
+        }
+
+        return existe;
     }
 }
 

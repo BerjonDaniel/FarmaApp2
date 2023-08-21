@@ -214,6 +214,12 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 new SimpleCursorAdapter(this, R.layout.notes_row, notesCursor, from, to, 0);
         m_listview.setAdapter(notes);
     }
+    // Método público para actualizar la ListView
+    public void actualizarListView(View view) {
+        fillData();
+        Toast.makeText(MainActivity.this, "Actualizando medicamentos",
+                Toast.LENGTH_SHORT).show();
+    }
 
     //Mostraremos el dia seleccionado en la pantalla principal
     private void showEventDetail(int day, int month, int year) {
@@ -230,7 +236,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         int month = calendar.get(Calendar.MONTH);
         int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
         String[] monthNames = {"enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"};
-        String monthName = monthNames[month - 1];
+        String monthName = monthNames[month ];
         diaSeleccionado = findViewById(R.id.diaSeleccionado);
         diaSeleccionado.setText( dayOfMonth + " de " + monthName);
         diaActual = findViewById(R.id.actualDate);
