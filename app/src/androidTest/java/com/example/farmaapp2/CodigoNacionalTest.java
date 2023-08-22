@@ -34,6 +34,27 @@ public class CodigoNacionalTest {
     public ActivityScenarioRule<MainActivity> activityRule =
             new ActivityScenarioRule<>(MainActivity.class);
 
+
+    @Test
+    public void testBarcodeConfirmation_ShowsProductName() {
+        // Hacer clic en el botón que infla el menú
+        onView(withId(R.id.button)).perform(click());
+
+        // Hacer clic en el segundo elemento del menú (Código nacional)
+        onView(withText("Codigo nacional")).perform(click());
+
+        // Introducir un código de barras en el campo de texto
+        onView(withId(R.id.title_cn)).perform(typeText("692719"), closeSoftKeyboard());
+
+        // Hacer clic en el botón de confirmar
+        onView(withId(R.id.confirm)).perform(click());
+
+        // Verificar que la vista de nombre del medicamento se muestra
+        onView(withId(R.id.nombre_medicamento)).check(matches(isDisplayed()));
+
+        // Verificar que el nombre del medicamento se muestra correctamente
+        onView(withId(R.id.nombre_medicamento)).check(matches(withText("ELOCOM 1 MG/G CREMA")));
+    }
     /*
     @Rule
     public IntentsTestRule<MyActivity> intentsTestRule =
@@ -82,39 +103,6 @@ public class CodigoNacionalTest {
 
         // Create the ActivityResult with the Intent.
         return new Instrumentation.ActivityResult(Activity.RESULT_OK, resultData);
-    }
-
-     */
-
-    @Test
-    public void testBarcodeConfirmation_ShowsProductName() {
-        // Hacer clic en el botón que infla el menú
-        onView(withId(R.id.button)).perform(click());
-
-        // Hacer clic en el segundo elemento del menú (Código nacional)
-        onView(withText("Codigo nacional")).perform(click());
-
-        // Introducir un código de barras en el campo de texto
-        onView(withId(R.id.title_cn)).perform(typeText("692719"), closeSoftKeyboard());
-
-        // Hacer clic en el botón de confirmar
-        onView(withId(R.id.confirm)).perform(click());
-
-        // Verificar que la vista de nombre del medicamento se muestra
-        onView(withId(R.id.nombre_medicamento)).check(matches(isDisplayed()));
-
-        // Verificar que el nombre del medicamento se muestra correctamente
-        onView(withId(R.id.nombre_medicamento)).check(matches(withText("ELOCOM 1 MG/G CREMA")));
-    }
-
-    /*
-    @Test
-    public void testViewDiaSeleccionado(){
-
-    }
-    @Test
-    public void testButtonActualDate(){
-
     }
 
      */

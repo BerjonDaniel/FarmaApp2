@@ -71,6 +71,10 @@
             android:name=".AuthenticationActivity"
             android:exported="false"
             android:label="Inicio de Sesión" />
+        <activity
+            android:name=".CreateNoteFromCodigoNacional"
+            android:exported="false"
+            android:label="Nuevo Medicamento" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

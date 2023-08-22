@@ -23,7 +23,7 @@
             app:srcCompat="@drawable/pharminder_logo" />
         -->
         <LinearLayout
-            android:layout_width="387dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="top"
             android:orientation="vertical">
@@ -36,7 +36,7 @@
 
                 <LinearLayout
                     android:id="@+id/info_medicamentos"
-                    android:layout_width="match_parent"
+                    android:layout_width="300dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="top"
                     android:orientation="vertical">
@@ -95,10 +95,15 @@
 
                 </LinearLayout>
 
-                <ImageView
-                    android:id="@+id/imagen_medicamento"
+                <TextView
+                    android:id="@+id/resultado222"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right|top"
+                    android:gravity="right"
+                    android:layout_marginEnd="5dp"
+                    android:text="Resultado del escaneo"
+                    />
 
             </LinearLayout>
 
@@ -133,8 +138,8 @@
             <LinearLayout
                 android:layout_width="370dp"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="10dp"
                 android:layout_marginTop="5dp"
+                android:layout_gravity="center"
                 android:orientation="vertical">
 
 
@@ -224,16 +229,7 @@
 
 
         </LinearLayout>
-        <TextView
-            android:id="@+id/resultado222"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center|right|top"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="10dp"
-            android:gravity="center|top"
-            android:text="Resultado del escaneo"
-            />
+
 
 
     </FrameLayout>

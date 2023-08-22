@@ -273,18 +273,18 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
         switch (item.getItemId()) {
             case R.id.item1:
-                Toast.makeText(this, "Codigo de barras", Toast.LENGTH_SHORT);
+                //Toast.makeText(this, "Codigo de barras", Toast.LENGTH_SHORT);
                 escanear();
                 return true;
 
             case R.id.item2:
-                Toast.makeText(this, "Codigo nacional", Toast.LENGTH_SHORT);
+                //Toast.makeText(this, "Codigo nacional", Toast.LENGTH_SHORT);
                 createNoteFromCN();
                 return true;
 
 
             case R.id.action_settings:
-                Toast.makeText(this, "setings", Toast.LENGTH_SHORT);
+                //Toast.makeText(this, "setings", Toast.LENGTH_SHORT);
                 startActivity(new Intent(MainActivity.this, SettingsActivity.class));
                 return true;
             default:
@@ -402,10 +402,11 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
     //-------------------Busqueda manual por Codigo Nacional------------------------------
     private void createNoteFromCN() {
-        /*Intent i = new Intent(this, com.example.pharminder_2_0.EditActivity.class);
-        startActivityForResult(i, 1);*/
-        setContentView(R.layout.busqueda_cn);
+        Intent intent = new Intent(this, CreateNoteFromCodigoNacional.class);
+        startActivity(intent);
+
     }
+    /*
     public void createNoteFromCN(View view){
         codigo_nacional = findViewById(R.id.title_cn);
         String codigonacional = codigo_nacional.getText().toString();
@@ -424,6 +425,8 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             setContentView(R.layout.activity_notepad);
         }
     }
+
+     */
 
     public void openMaps(View view) {
         // Do something in response to button

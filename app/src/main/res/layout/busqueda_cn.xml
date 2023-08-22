@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:id="@+id/introduce_CN"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".MainActivity">
+    tools:context=".CreateNoteFromCodigoNacional">
 
     <FrameLayout
         android:layout_width="match_parent"

@@ -409,6 +409,10 @@ public class MapsActivity2 extends AppCompatActivity implements OnMapReadyCallba
                                         }
                                     }
                                     jsonReader.endObject();
+                                } else{
+                                    jsonReader.skipValue();
+                                }
+                                    /*
                                 } else if(name.equals("opening_hours")){
                                     jsonReader.beginObject();
                                     while (jsonReader.hasNext()) {
@@ -430,6 +434,8 @@ public class MapsActivity2 extends AppCompatActivity implements OnMapReadyCallba
                                 } else{
                                     jsonReader.skipValue();
                                 }
+
+                                     */
                             }
                             jsonReader.endObject();
                             temp.add(poi);
