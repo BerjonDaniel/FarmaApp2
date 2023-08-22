@@ -406,27 +406,6 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         startActivity(intent);
 
     }
-    /*
-    public void createNoteFromCN(View view){
-        codigo_nacional = findViewById(R.id.title_cn);
-        String codigonacional = codigo_nacional.getText().toString();
-
-        if(codigonacional != null){
-            if(codigonacional.length() == Numero_de_Digitos){
-                APIFromCIMATask api = new APIFromCIMATask();
-                api.cn = codigonacional;
-                api.execute();
-            }else{
-                Toast.makeText(this, "Introduzca un código válido", Toast.LENGTH_LONG).show();
-                setContentView(R.layout.activity_notepad);
-            }
-        }else{
-            Toast.makeText(this, "Introduzca un código válido", Toast.LENGTH_LONG).show();
-            setContentView(R.layout.activity_notepad);
-        }
-    }
-
-     */
 
     public void openMaps(View view) {
         // Do something in response to button
