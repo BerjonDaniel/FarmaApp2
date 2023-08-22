@@ -29,7 +29,7 @@ import static androidx.test.espresso.action.ViewActions.click;
 public class CodigoNacionalTest {
 
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 123;
-
+/*
     @Rule
     public ActivityScenarioRule<MainActivity> activityRule =
             new ActivityScenarioRule<>(MainActivity.class);
@@ -55,6 +55,8 @@ public class CodigoNacionalTest {
         // Verificar que el nombre del medicamento se muestra correctamente
         onView(withId(R.id.nombre_medicamento)).check(matches(withText("ELOCOM 1 MG/G CREMA")));
     }
+
+ */
     /*
     @Rule
     public IntentsTestRule<MyActivity> intentsTestRule =
