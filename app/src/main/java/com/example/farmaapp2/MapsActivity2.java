@@ -2,6 +2,8 @@ package com.example.farmaapp2;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.location.LocationListener;
 import android.os.Bundle;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.GoogleMap;
@@ -29,9 +31,15 @@ import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.Marker;
 
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,36 +50,24 @@ class GooglePlace {
     private String name;
     private String latitude;
     private String longitude;
-    private boolean openNow = true;
-    private int rating;
-    private String direccion;
 
     public GooglePlace() {
         this.name = "";
         this.latitude = "";
         this.longitude = "";
-        this.openNow = true;
-        this.rating = 0;
-        this.direccion = "";
     }
 
     public void setName(String name) {
         this.name = name;
     }
 
-    public void setLatitude(String latitude) { this.latitude = latitude; }
+    public void setLatitude(String latitude) {
+
+        this.latitude = latitude;
+    }
 
     public void setLongitude(String longitude) {
         this.longitude = longitude;
-    }
-    public void setOpenNow(String openNow) {
-        this.openNow = true;
-    }
-    public void setRating(int rating) {
-        this.rating = rating;
-    }
-    public void setDireccion(String direccion) {
-        this.direccion = direccion;
     }
 
     public String getName() {
@@ -85,9 +81,6 @@ class GooglePlace {
     public String getLongitude() {
         return longitude;
     }
-    public Boolean getOpenNow(){ return openNow;}
-    public int getRating(){ return rating;}
-    public String getDireccion(){ return direccion;}
 
 }
 
@@ -150,9 +143,6 @@ public class MapsActivity2 extends AppCompatActivity implements OnMapReadyCallba
         // En primer lugar, registramos los escuchadores de eventos del mapa que hemos creado
         mMap.setOnMapClickListener(mClickListener); // para clicks sobre el mapa
 
-        // Configurar el oyente de clic en los marcadores para mostrar la ventana emergente (InfoWindow)
-
-
         // Activamos algunos controles en el mapa:
         // (https://developers.google.com/maps/documentation/android/interactivity)
 
@@ -163,8 +153,6 @@ public class MapsActivity2 extends AppCompatActivity implements OnMapReadyCallba
         settings.setZoomControlsEnabled(true); // botones para hacer zoom
 
         settings.setMapToolbarEnabled(true);
-
-        settings.setTiltGesturesEnabled(true);
 
         settings.setCompassEnabled(true); // brújula (SOLO se muestra el icono si se rota el mapa con los dedos)
 
@@ -181,6 +169,9 @@ public class MapsActivity2 extends AppCompatActivity implements OnMapReadyCallba
                 double latitude = location.getLatitude();
                 locationTextView.setText(latitude + "," + longitude);
                 centerMap(latitude, longitude);
+
+                // Configurar requestLocationUpdates para recibir actualizaciones de ubicación en tiempo real
+                lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000, 10, locationListener);
 
                 /*
                 int locationAux = (int) (longitude + latitude);
@@ -212,6 +203,7 @@ public class MapsActivity2 extends AppCompatActivity implements OnMapReadyCallba
             if (checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 // Obtener la ubicación actualizada aquí
                 LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000, 10, locationListener);
                 @SuppressLint("MissingPermission")
                 Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                 double longitude = location.getLongitude();
@@ -220,9 +212,9 @@ public class MapsActivity2 extends AppCompatActivity implements OnMapReadyCallba
                 new GooglePlaces().execute();
                 centerMap(latitude, longitude);
             } else {
-            // no tiene permiso, solicitarlo
-            requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_PERMISSION_ACCESS_FINE_LOCATION);
-            // cuando se nos conceda el permiso se llamará a onRequestPermissionsResult()
+                // no tiene permiso, solicitarlo
+                requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_PERMISSION_ACCESS_FINE_LOCATION);
+                // cuando se nos conceda el permiso se llamará a onRequestPermissionsResult()
             }
 
 
@@ -319,20 +311,19 @@ public class MapsActivity2 extends AppCompatActivity implements OnMapReadyCallba
             for (int i = 0; i < result.size(); i++) {
                 // make a list of the venus that are loaded in the list.
                 // show the name, the category and the city
-                listTitle.add(i, "Place name: " +result.get(i).getName() + "\nLatitude: " + result.get(i).getLatitude() + "\nLongitude:" + result.get(i).getLongitude()
-                        + "\nOpen now:" + result.get(i).getOpenNow() + "\nRating:" + result.get(i).getRating() + "\nDireccion:" + result.get(i).getDireccion());
+                listTitle.add(i, "Place name: " +result.get(i).getName() + "\nLatitude: " + result.get(i).getLatitude() + "\nLongitude:" + result.get(i).getLongitude());
                 MarkerOptions markerOpts = new MarkerOptions();
                 double latitud = Double.parseDouble(result.get(i).getLatitude() );
                 double longitud = Double.parseDouble(result.get(i).getLongitude() );
                 LatLng location = new LatLng(latitud, longitud);
-                GooglePlace resultAux = result.get(i);
+
                 markerOpts.position(location); // ubicación en el mapa (único requisito imprescindible)
-                markerOpts.draggable(false); // se le permite ser arrastrado (¡preconfiguración!
+                markerOpts.draggable(true); // se le permite ser arrastrado (¡preconfiguración!
                 // para hacerlo a posteriori, utilizar Marker.setDraggable(boolean))
                 // Se arrastra con una pulsación larga + movimiento sin levantar el dedo
                 markerOpts.title(result.get(i).getName()); // título
 
-                mMap.addMarker(markerOpts); //Añaddimos el marcador con toda la info en el mapa
+                Marker marker = mMap.addMarker(markerOpts);
 
             }
 
@@ -412,30 +403,6 @@ public class MapsActivity2 extends AppCompatActivity implements OnMapReadyCallba
                                 } else{
                                     jsonReader.skipValue();
                                 }
-                                    /*
-                                } else if(name.equals("opening_hours")){
-                                    jsonReader.beginObject();
-                                    while (jsonReader.hasNext()) {
-                                        name = jsonReader.nextName();
-                                        if (name.equals("open_now")) {
-                                            poi.setOpenNow(jsonReader.nextString());
-                                            System.out.println("PLACE OPEN NOW:" + poi.getName());
-                                        } else {
-                                            jsonReader.skipValue();
-                                        }
-                                    }
-                                    jsonReader.endObject();
-                                } else if(name.equals("rating")){
-                                    poi.setRating(jsonReader.nextInt());
-                                    System.out.println("PLACE RATING:" + poi.getRating()); //Falla  AqQUIIIIIIIIIIIIIIIII
-                                }else if(name.equals("vicinity")){
-                                    poi.setDireccion(jsonReader.nextString());
-                                    System.out.println("PLACE DIRECTION:" + poi.getDireccion());
-                                } else{
-                                    jsonReader.skipValue();
-                                }
-
-                                     */
                             }
                             jsonReader.endObject();
                             temp.add(poi);
@@ -454,6 +421,31 @@ public class MapsActivity2 extends AppCompatActivity implements OnMapReadyCallba
 
         return temp;
     }
+    // Definir un LocationListener para manejar las actualizaciones de ubicación
+    private final LocationListener locationListener = new LocationListener() {
+        @Override
+        public void onLocationChanged(Location location) {
+            double longitude = location.getLongitude();
+            double latitude = location.getLatitude();
+            locationTextView.setText(latitude + "," + longitude);
+            // Actualizar el mapa con la nueva ubicación
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                centerMap(latitude, longitude);
+            }
+            // También puedes ejecutar aquí la lógica de búsqueda de lugares, etc.
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
+        }
+    };
 
 }
-

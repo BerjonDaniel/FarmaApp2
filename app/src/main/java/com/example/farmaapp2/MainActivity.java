@@ -36,6 +36,7 @@ import androidx.core.content.ContextCompat;
 
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
@@ -71,6 +72,9 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     //private DateAdapterDesuso dbDateAdapter;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseAuth mAuth;
+    private FirebaseUser user;
+    private String emailUsuario;
+    private String contraseñaUsuario;
     private ListView m_listview;
     private CalendarView calendarView;
     private TextView diaSeleccionado;
@@ -116,6 +120,11 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         // Inicializa FirebaseApp antes de usar Firebase
         FirebaseApp.initializeApp(this);
         mAuth = FirebaseAuth.getInstance();
+        user = mAuth.getCurrentUser();
+        if(user!=null){
+            emailUsuario = user.getEmail();
+        }
+
 
         //Para mostrar encima del ListView el dia que hemos seleccionado
         calendarView = findViewById(R.id.calendarView2);
@@ -409,7 +418,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
     public void openMaps(View view) {
         // Do something in response to button
-        startActivity(new Intent(MainActivity.this, MapsActivity2.class));
+        startActivity(new Intent(MainActivity.this, MapsActivity3.class));
 
     }
 
