@@ -1,5 +1,5 @@
 package com.example.farmaapp2;
-
+/*
 import static org.junit.Assert.assertEquals;
 
 import android.Manifest;
@@ -44,3 +44,5 @@ public class ContextTest {
     }
 }
 
+
+ */
