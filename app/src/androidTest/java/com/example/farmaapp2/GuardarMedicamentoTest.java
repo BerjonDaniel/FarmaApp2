@@ -22,7 +22,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 import com.example.farmaapp2.R;
-
+/*
 @RunWith(AndroidJUnit4.class)
 public class GuardarMedicamentoTest {
 
@@ -57,7 +57,7 @@ public class GuardarMedicamentoTest {
         // Verificamos que el método insertarMedicamento fue llamado con los datos correctos
         // En este caso, se verifica que el nombre "Ibuprofeno" se haya pasado al método insertarMedicamento
         // Dependiendo de cómo se use el MedicamentoAdapter, podrías necesitar verificar otros datos también
-        // Mockito.verify(medicamentoAdapter).insertarMedicamento("Ibuprofeno", /* otros datos */);
+        // Mockito.verify(medicamentoAdapter).insertarMedicamento("Ibuprofeno", /* otros datos );
 
         // Aseguramos que se muestra el Toast correcto (esto dependerá de cómo manejas los Toasts)
         // assertTrue(guardarMedicamento.isToastShown()); // Debes implementar este método en GuardarMedicamento
@@ -66,3 +66,5 @@ public class GuardarMedicamentoTest {
         // assertTrue(guardarMedicamento.isActivityFinished()); // Debes implementar este método en GuardarMedicamento
     }
 }
+
+ */

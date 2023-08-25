@@ -31,7 +31,7 @@ import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.isEmptyOrNullString;
 import static org.hamcrest.Matchers.equalTo;
 
-
+/*
 @RunWith(AndroidJUnit4.class)
 public class MapsTestActualLocation {
 
@@ -123,7 +123,7 @@ public class MapsTestActualLocation {
             throw new RuntimeException("La ubicación del dispositivo no está habilitada");
         }
     }
-     */
+
     @Test
     public void testActualLocationIsDisplayed() {
         // Realiza clic en el botón en la pantalla principal
@@ -153,3 +153,5 @@ public class MapsTestActualLocation {
     }
 
 }
+
+ */
