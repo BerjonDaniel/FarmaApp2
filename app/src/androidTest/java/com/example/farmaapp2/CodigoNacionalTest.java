@@ -1,5 +1,5 @@
 package com.example.farmaapp2;
-
+/*
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
@@ -29,7 +29,7 @@ import static androidx.test.espresso.action.ViewActions.click;
 public class CodigoNacionalTest {
 
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 123;
-/*
+
     @Rule
     public ActivityScenarioRule<MainActivity> activityRule =
             new ActivityScenarioRule<>(MainActivity.class);
@@ -56,8 +56,8 @@ public class CodigoNacionalTest {
         onView(withId(R.id.nombre_medicamento)).check(matches(withText("ELOCOM 1 MG/G CREMA")));
     }
 
- */
-    /*
+
+
     @Rule
     public IntentsTestRule<MyActivity> intentsTestRule =
             new IntentsTestRule<>(MyActivity.class);
@@ -110,5 +110,6 @@ public class CodigoNacionalTest {
      */
 
 
-
+/*
 }
+*/
