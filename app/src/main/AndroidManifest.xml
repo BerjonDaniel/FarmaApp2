@@ -32,10 +32,6 @@
             android:exported="false"
             android:label="Preferencias"
             />
-        <activity android:name=".GuardarMedicamentoDesuso"
-            android:exported="false"
-            android:parentActivityName=".MainActivity"
-            android:label="GuardarMedicamento"/>
         <activity android:name=".GuardarMedicamento"
             android:exported="false"
             android:parentActivityName=".MainActivity"
