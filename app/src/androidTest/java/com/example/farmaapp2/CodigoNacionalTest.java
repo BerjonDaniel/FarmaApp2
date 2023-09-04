@@ -1,5 +1,6 @@
 package com.example.farmaapp2;
 
+import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
@@ -37,6 +38,7 @@ public class CodigoNacionalTest {
 
     @Test
     public void testBarcodeConfirmation_ShowsProductName() {
+        ActivityScenario<MainActivity> scenario = activityRule.getScenario();
         // Hacer clic en el botón que infla el menú
         onView(withId(R.id.button)).perform(click());
 

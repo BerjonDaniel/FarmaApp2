@@ -9,19 +9,6 @@
     tools:layout_centerHorizontal="false"
     >
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="60dp"
-        android:onClick="showPopup"
-        app:backgroundTint="#5ABDBD"
-        app:maxImageSize="44dp"
-        app:rippleColor="@color/white"
-        app:srcCompat="@drawable/ic_baseline_add_48"
-        android:translationZ="12dp"
-
-        />
     <!--
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -76,6 +63,20 @@
         android:layout_marginTop="40dp"
         android:onClick="showsettings"
         app:srcCompat="@drawable/ic_baseline_more_vert_24" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="60dp"
+        android:onClick="showPopup"
+        app:backgroundTint="#5ABDBD"
+        app:maxImageSize="44dp"
+        app:rippleColor="@color/white"
+        app:srcCompat="@drawable/ic_baseline_add_48"
+        android:translationZ="12dp"
+
+        />
 
     <ImageButton
         android:id="@+id/imageButton"
